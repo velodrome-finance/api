@@ -27,6 +27,14 @@ app.all('/*', function(req, res, next) {
   }
 })
 
+app.all('/health', function(req, res, next) {
+  res.status(200)
+  res.json({
+    'status': 200,
+    'message': 'health ok'
+  })
+})
+
 app.use(morgan('dev'))
 
 app.use(auth.connect(basic))
@@ -109,7 +117,7 @@ app.use(function(err, req, res) {
 
 var options = {}
 https.globalAgent.maxSockets = 50
-app.set('port', 8080)
+app.set('port', 80)
 var server = null
 server = require('http').Server(app)
 server.listen(app.get('port'), function () {
