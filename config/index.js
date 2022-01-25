@@ -24,7 +24,7 @@ const config = {
     "chainId":250,
     "name":"Wrapped FTM",
     "symbol":"WFTM",
-    "address":"0x21be370D5312f44cB42ce377BC9b8a0cEF1A4C83",
+    "address":"0x27Ce41c3cb9AdB5Edb2d8bE253A1c6A64Db8c96d",
     "decimals":18,
     "logoURI":"https://assets.spookyswap.finance/tokens/wFTM.png"
   }
