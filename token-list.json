@@ -9,17 +9,23 @@
   "name": "UST",
   "symbol": "UST",
   "decimals": 18,
-  "logoURI": "https://assets.coingecko.com/coins/images/12681/small/UST.png"
+  "logoURI": "https://assets.coingecko.com/coins/images/12681/large/UST.png"
 },{
   "address": "0xc0a51ac9d548bdcde53fa59448029e41a39feb20",
   "name": "MIM",
   "symbol": "MIM",
   "decimals": 18,
-  "logoURI": "https://assets.coingecko.com/coins/images/16786/small/mimlogopng.png"
+  "logoURI": "https://assets.coingecko.com/coins/images/16786/large/mimlogopng.png"
 },{
-  "address": "0xd3C885b06E9308ed1BC0f4EEF9bAee17652Ed747",
+  "address": "0x0673e1CF8EE91095232CFC98Ee1EbCeF42A1977E",
   "name": "BaseV1",
   "symbol": "BaseV1",
   "decimals": 18,
   "logoURI": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSGUogFgNz2W978aSwJIxUbMDbujfii-H40Q5K6MiGulaW8z1fqZwrfBY3IiLgFedGIF54&usqp=CAU"
+},{
+  "address": "0x27Ce41c3cb9AdB5Edb2d8bE253A1c6A64Db8c96d",
+  "name": "WFTM",
+  "symbol": "WFTM",
+  "decimals": 18,
+  "logoURI": "https://assets.coingecko.com/coins/images/16036/large/Fantom.png"
 }]

@@ -23,7 +23,7 @@ const config = {
   wftm: {
     "chainId":250,
     "name":"Wrapped FTM",
-    "symbol":"wFTM",
+    "symbol":"WFTM",
     "address":"0x21be370D5312f44cB42ce377BC9b8a0cEF1A4C83",
     "decimals":18,
     "logoURI":"https://assets.spookyswap.finance/tokens/wFTM.png"

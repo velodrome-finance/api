@@ -1,9 +1,12 @@
 const request = require('request-promise')
 
+const url = 'https://api.solidswap.exchange'
+// const url = 'http://localhost'
+
 async function doWork() {
   try {
     let options = {
-      uri: 'http://52.90.250.211:8080/api/v1/updateAssets',
+      uri: `${url}/api/v1/updateAssets`,
       headers: {
         'Authorization': 'Basic QTdEQTlBMDUwNzMxMTE3MDBFNDcyMTEwODBCOUE5RkEyMzFFNjMyMDhEMTc0NjQ1MEJGMkZDREVCNTU4OTlFQTowQTZDMkQyMkYxNDcwOTNFQ0NERUFFMzE4MTQ5NUE2RjUyNkUzREI1NzBDMkVFQTkzREI5QzEwOEZBQkNFOTc5'
       }
@@ -11,8 +14,7 @@ async function doWork() {
     console.log('updating assets...')
     const done1 = await request(options)
 
-    options.uri = 'http://52.90.250.211:8080/api/v1/updatePairs'
-
+    options.uri = `${url}/api/v1/updatePairs`
 
     console.log('updating pairs...')
     const done2 = await request(options)
