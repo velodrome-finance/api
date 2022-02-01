@@ -19,9 +19,10 @@ async function doWork() {
     console.log('updating pairs...')
     const done2 = await request(options)
 
-    console.log('done')
+    process.exit(1)
   } catch(ex) {
     console.log(ex)
+    process.exit(2)
   }
 }
 
