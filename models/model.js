@@ -183,7 +183,7 @@ const model = {
               decimals: 18,
               totalSupply: BigNumber(totalSupply).div(10**18).toFixed(18),
               weight: BigNumber(gaugeWeight).div(10**18).toFixed(18),
-              weightPercent: BigNumber(gaugeWeight).times(100).div(totalWeight).toFixed(2),
+              weightPercent: BigNumber(totalWeight).gt(0) ? BigNumber(gaugeWeight).times(100).div(totalWeight).toFixed(2) : 0,
               bribes: bribes,
             }
           }
