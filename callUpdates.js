@@ -1,6 +1,7 @@
 const request = require('request-promise')
 
-const url = 'https://api.solidswap.exchange'
+const url = 'https://api.solidly.exchange'
+// const url = 'https://api.solidswap.exchange'
 // const url = 'http://localhost'
 
 async function doWork() {

@@ -3,12 +3,18 @@ const CoinGecko = require('coingecko-api')
 const Web3 = require('web3')
 const config = require('../config')
 const redisHelper = require('../helpers/redis')
-const CONTRACTS = require('../constants/contracts.js')
 const BigNumber = require("bignumber.js")
 const fs = require('fs')
 
 const ZERO_ADDRESS = '0x0000000000000000000000000000000000000000'
 const CoinGeckoClient = new CoinGecko()
+
+let CONTRACTS = null
+if(config.testnet === '1') {
+  CONTRACTS = require('../constants/contractsTestnet.js')
+} else {
+  CONTRACTS = require('../constants/contracts.js')
+}
 
 const model = {
   async updateAssets(req, res, next) {
