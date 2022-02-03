@@ -43,7 +43,9 @@ const model = {
         return json.tokens
       }).flat()
 
-      const removedDuplpicates = tokensLists.filter((value, index, self) =>
+      const removedDuplpicates = tokensLists.filter((t) => {
+        return t.chainId === 250 && t.decimals !== ''
+      }).filter((value, index, self) =>
         index === self.findIndex((t) => (
           t.address === value.address
         ))
