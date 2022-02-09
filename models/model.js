@@ -20,6 +20,16 @@ const model = {
   async updateAssets(req, res, next) {
     try {
       if(config.testnet === '1') {
+        let rawdata = fs.readFileSync('testnet-token-list.json');
+        let tokenList = JSON.parse(rawdata);
+
+        const RC = await redisHelper.connect()
+        const d = await RC.set('baseAssets', JSON.stringify(tokenList));
+
+        res.status(205)
+        res.body = { 'status': 200, 'success': true, 'data': tokenList }
+        return next(null, req, res, next)
+      } else {
         let rawdata = fs.readFileSync('token-list.json');
         let tokenList = JSON.parse(rawdata);
 
