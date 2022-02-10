@@ -1,12 +1,12 @@
 const abis = require("./abis")
 
-module.exports.FACTORY_ADDRESS = '0x117F6F61e797E411Ea92F0ea1555c397Ecf17939'
+module.exports.FACTORY_ADDRESS = '0x3fAaB499b519fdC5819e3D7ed0C26111904cbc28'
 module.exports.FACTORY_ABI = abis.factoryABI
 
-module.exports.ROUTER_ADDRESS = '0xCAE00F31F7cB5A78450Ca119fc2D0e7bbaEF0439'
+module.exports.ROUTER_ADDRESS = '0xa38cd27185a464914D3046f0AB9d43356B34829D'
 module.exports.ROUTER_ABI = abis.routerABI
 
-module.exports.GAUGES_ADDRESS = '0xfF61f4aC23a3d8b5D1f21C231282A96deF3855D6'
+module.exports.GAUGES_ADDRESS = '0xdC819F5d05a6859D2faCbB4A44E5aB105762dbaE'
 module.exports.GAUGES_ABI = abis.gaugesABI
 
 module.exports.ERC20_ABI = abis.erc20ABI
