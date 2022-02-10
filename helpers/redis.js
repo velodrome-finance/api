@@ -1,21 +1,21 @@
 const config = require('../config')
 const redis = require('redis');
 
+const RedisClient = redis.createClient({
+  url: `redis://${config.redis.host}:${config.redis.port}`
+})
+
 const connect = async () => {
   try {
-    const RedisClient = redis.createClient({
-      url: `redis://${config.redis.host}:${config.redis.port}`
-    })
 
-    const connected = false
+    let connected = false
     try {
       const pong = await RedisClient.ping()
-      console.log(pong)
-      if(pong == 'pong') {
+      if(pong == 'PONG') {
         connected = true
       }
     } catch(ex) {
-
+      console.log(ex)
     }
 
     if(!connected) {
