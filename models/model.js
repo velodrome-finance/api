@@ -142,11 +142,11 @@ const model = {
             pairContract.methods.decimals().call(),
             pairContract.methods.stable().call(),
             gaugesContract.methods.gauges(pairAddress).call(),
-            gaugesContract.methods.weights(pairAddress).call()
+            gaugesContract.methods.weights(pairAddress).call(),
           ])
 
-          const token0 = await model._getBaseAsset(token0Address)
-          const token1 = await model._getBaseAsset(token1Address)
+          const token0 = await model._getBaseAsset(web3, token0Address)
+          const token1 = await model._getBaseAsset(web3, token1Address)
 
           const thePair = {
             address: pairAddress,
@@ -171,11 +171,11 @@ const model = {
             const tokensLength = await bribeContract.methods.rewardsListLength().call()
             const arry = Array.from({length: parseInt(tokensLength)}, (v, i) => i)
 
-            const bribes = await Promise.all(
+            let bribes = await Promise.all(
               arry.map(async (idx) => {
 
                 const tokenAddress = await bribeContract.methods.rewards(idx).call()
-                const token = await model._getBaseAsset(tokenAddress)
+                const token = await model._getBaseAsset(web3, tokenAddress)
 
                 const [ rewardRate ] = await Promise.all([
                   bribeContract.methods.rewardRate(tokenAddress).call(),
@@ -188,6 +188,10 @@ const model = {
                 }
               })
             )
+
+            bribes = bribes.filter((bribe) => {
+              return bribe.token.isWhitelisted
+            })
 
             thePair.gauge = {
               address: gaugeAddress,
@@ -218,7 +222,7 @@ const model = {
     }
   },
 
-  async _getBaseAsset(address) {
+  async _getBaseAsset(web3, address) {
     try {
       const RedisClient = await redisHelper.connect()
 
@@ -237,17 +241,22 @@ const model = {
         return as.address.toLowerCase() === address.toLowerCase()
       })
       if(theBaseAsset.length > 0) {
-        return theBaseAsset[0]
+        const gaugesContract = new web3.eth.Contract(CONTRACTS.GAUGES_ABI, CONTRACTS.GAUGES_ADDRESS)
+        const isWhitelisted = await gaugesContract.methods.isWhitelisted(address).call()
+
+        let returnAsset = theBaseAsset[0]
+        returnAsset.isWhitelisted = isWhitelisted
+        return returnAsset
       }
 
-      const web3 =  new Web3(config.web3.provider);
-
+      const gaugesContract = new web3.eth.Contract(CONTRACTS.GAUGES_ABI, CONTRACTS.GAUGES_ADDRESS)
       const baseAssetContract = new web3.eth.Contract(CONTRACTS.ERC20_ABI, address)
 
-      const [ symbol, decimals, name ] = await Promise.all([
+      const [ symbol, decimals, name, isWhitelisted ] = await Promise.all([
         baseAssetContract.methods.symbol().call(),
         baseAssetContract.methods.decimals().call(),
         baseAssetContract.methods.name().call(),
+        gaugesContract.methods.isWhitelisted(address).call()
       ]);
 
       const newBaseAsset = {
@@ -256,7 +265,8 @@ const model = {
         name: name,
         decimals: parseInt(decimals),
         chainId: 250,
-        logoURI: null
+        logoURI: null,
+        isWhitelisted: isWhitelisted
       }
 
       extraAssets.push(newBaseAsset)
