@@ -1,4 +1,5 @@
-[{
+[
+	{
 		"name": "Solid",
 		"address": "0x888EF71766ca594DED1F0FA3AE64eD2941740A20",
 		"symbol": "SOLID",
@@ -796,4 +797,12 @@
 		"decimals": 18,
 		"chainId": 250,
 		"logoURI": "https://solidly.exchange/Hundred.png"
-	}]
+	}, {
+		"name": "Iron Bank",
+		"address": "0x00a35fd824c717879bf370e70ac6868b95870dfb",
+		"symbol": "IB",
+		"decimals": 18,
+		"chainId": 250,
+		"logoURI": "https://assets.coingecko.com/coins/images/22902/large/ironbank.png"
+	}
+]
