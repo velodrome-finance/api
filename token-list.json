@@ -819,7 +819,7 @@
 		"symbol": "SOLIDsex",
 		"decimals": 18,
 		"chainId": 250,
-		"logoURI": "https://assets.coingecko.com/coins/images/23855/large/photo_2022-02-23_09.01.21.jpeg"
+		"logoURI": "https://solidexfinance.com/tokens/0x41adAc6C1Ff52C5e27568f27998d747F7b69795B/logo.png"
 	},
 	{
 		"name": "BeethovenxToken",
@@ -835,7 +835,7 @@
 		"symbol": "fBEETS",
 		"decimals": 18,
 		"chainId": 250,
-		"logoURI": "https://assets.coingecko.com/coins/images/19158/large/beets-icon-large.png"
+		"logoURI": "https://beets.fi/img/fBEETS.d7f7145f.png"
 	},
 	{
 		"name": "Boo MirrorWorld",
