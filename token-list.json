@@ -804,5 +804,21 @@
 		"decimals": 18,
 		"chainId": 250,
 		"logoURI": "https://assets.coingecko.com/coins/images/22902/large/ironbank.png"
+	},
+	{
+		"name": "Solidex",
+		"address": "0xD31Fcd1f7Ba190dBc75354046F6024A9b86014d7",
+		"symbol": "SEX",
+		"decimals": 18,
+		"chainId": 250,
+		"logoURI": "https://assets.coingecko.com/coins/images/23855/large/photo_2022-02-23_09.01.21.jpeg"
+	},
+	{
+		"name": "SOLIDsex: Tokenized veSOLID",
+		"address": "0x41adac6c1ff52c5e27568f27998d747f7b69795b",
+		"symbol": "SOLIDsex",
+		"decimals": 18,
+		"chainId": 250,
+		"logoURI": "https://assets.coingecko.com/coins/images/23855/large/photo_2022-02-23_09.01.21.jpeg"
 	}
 ]
