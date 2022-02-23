@@ -844,5 +844,21 @@
 		"decimals": 18,
 		"chainId": 250,
 		"logoURI": "https://assets.coingecko.com/coins/images/22609/large/xboo.png"
+	},
+	{
+		"name": "Multichain",
+		"address": "0x9Fb9a33956351cf4fa040f65A13b835A3C8764E3",
+		"symbol": "MULTI",
+		"decimals": 18,
+		"chainId": 250,
+		"logoURI": "https://assets.coingecko.com/coins/images/22087/large/1_Wyot-SDGZuxbjdkaOeT2-A.png"
+	},
+	{
+		"name": "Fantom",
+		"address": "0x6362496bef53458b20548a35a2101214ee2be3e0",
+		"symbol": "anyFTM",
+		"decimals": 18,
+		"chainId": 250,
+		"logoURI": "https://assets.spookyswap.finance/tokens/wFTM.png"
 	}
 ]
