@@ -860,5 +860,13 @@
 		"decimals": 18,
 		"chainId": 250,
 		"logoURI": "https://assets.spookyswap.finance/tokens/wFTM.png"
+	},
+	{
+		"name": "0xDAO",
+		"address": "0xc165d941481e68696f43EE6E99BFB2B23E0E3114",
+		"symbol": "OXD",
+		"decimals": 18,
+		"chainId": 250,
+		"logoURI": "https://assets.coingecko.com/coins/images/22888/large/rjks-OoT_400x400.jpg"
 	}
 ]
