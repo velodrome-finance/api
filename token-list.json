@@ -899,7 +899,7 @@
 		"name": "rainSpirit",
 		"address": "0xf9c6e3C123f0494A4447100bD7dbd536F43CC33A",
 		"symbol": "RAINSPIRIT",
-		"decimals": 8,
+		"decimals": 18,
 		"chainId": 250,
 		"logoURI": ""
 	}, {
