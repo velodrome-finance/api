@@ -884,5 +884,37 @@
 		"decimals": 18,
 		"chainId": 250,
 		"logoURI": "https://assets.coingecko.com/coins/images/18024/large/syn.png"
+	},
+	{
+		"name": "veDAO Token",
+		"address": "0x911da02c1232a3c3e1418b834a311921143b04d7",
+		"symbol": "WeVE",
+		"decimals": 18,
+		"chainId": 250,
+		"logoURI": "https://assets.coingecko.com/coins/images/22741/large/S0aENDh0_400x400.jpg"
+	},
+	{
+		"name": "Frax Share",
+		"address": "0x7d016eec9c25232b01F23EF992D98ca97fc2AF5a",
+		"symbol": "FXS",
+		"decimals": 18,
+		"chainId": 250,
+		"logoURI": "https://assets.coingecko.com/coins/images/13423/large/frax_share.png"
+	},
+	{
+		"name": "renBTC",
+		"address": "0xDBf31dF14B66535aF65AaC99C32e9eA844e14501",
+		"symbol": "renBTC",
+		"decimals": 8,
+		"chainId": 250,
+		"logoURI": "https://assets.coingecko.com/coins/images/11370/large/Bitcoin.jpg"
+	},
+	{
+		"name": "rainSpirit",
+		"address": "0xf9c6e3C123f0494A4447100bD7dbd536F43CC33A",
+		"symbol": "RAINSPIRIT",
+		"decimals": 8,
+		"chainId": 250,
+		"logoURI": ""
 	}
 ]
