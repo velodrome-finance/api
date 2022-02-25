@@ -14,6 +14,7 @@ router.get('/api/v1/routeAssets', bodyParser.json(), model.getRouteAssets)
 
 router.get('/api/v1/updateAssets', bodyParser.json(), model.updateAssets)
 router.get('/api/v1/updatePairs', bodyParser.json(), model.updatePairs)
+// router.get('/api/v1/mergeTokenLists', bodyParser.json(), model.mergeTokenLists)
 
 
 module.exports = router

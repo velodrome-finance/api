@@ -804,117 +804,446 @@
 		"decimals": 18,
 		"chainId": 250,
 		"logoURI": "https://assets.coingecko.com/coins/images/22902/large/ironbank.png"
-	},
-	{
+	}, {
 		"name": "Solidex",
 		"address": "0xD31Fcd1f7Ba190dBc75354046F6024A9b86014d7",
 		"symbol": "SEX",
 		"decimals": 18,
 		"chainId": 250,
 		"logoURI": "https://assets.coingecko.com/coins/images/23855/large/photo_2022-02-23_09.01.21.jpeg"
-	},
-	{
+	}, {
 		"name": "SOLIDsex: Tokenized veSOLID",
 		"address": "0x41adac6c1ff52c5e27568f27998d747f7b69795b",
 		"symbol": "SOLIDsex",
 		"decimals": 18,
 		"chainId": 250,
 		"logoURI": "https://solidexfinance.com/tokens/0x41adAc6C1Ff52C5e27568f27998d747F7b69795B/logo.png"
-	},
-	{
+	}, {
 		"name": "BeethovenxToken",
 		"address": "0xf24bcf4d1e507740041c9cfd2dddb29585adce1e",
 		"symbol": "BEETS",
 		"decimals": 18,
 		"chainId": 250,
 		"logoURI": "https://assets.coingecko.com/coins/images/19158/large/beets-icon-large.png"
-	},
-	{
+	}, {
 		"name": "FreshBeets",
 		"address": "0xfcef8a994209d6916EB2C86cDD2AFD60Aa6F54b1",
 		"symbol": "fBEETS",
 		"decimals": 18,
 		"chainId": 250,
 		"logoURI": "https://beets.fi/img/fBEETS.d7f7145f.png"
-	},
-	{
+	}, {
 		"name": "Boo MirrorWorld",
 		"address": "0xa48d959AE2E88f1dAA7D5F611E01908106dE7598",
 		"symbol": "xBOO",
 		"decimals": 18,
 		"chainId": 250,
 		"logoURI": "https://assets.coingecko.com/coins/images/22609/large/xboo.png"
-	},
-	{
+	}, {
 		"name": "Multichain",
 		"address": "0x9Fb9a33956351cf4fa040f65A13b835A3C8764E3",
 		"symbol": "MULTI",
 		"decimals": 18,
 		"chainId": 250,
 		"logoURI": "https://assets.coingecko.com/coins/images/22087/large/1_Wyot-SDGZuxbjdkaOeT2-A.png"
-	},
-	{
+	}, {
 		"name": "Fantom",
 		"address": "0x6362496bef53458b20548a35a2101214ee2be3e0",
 		"symbol": "anyFTM",
 		"decimals": 18,
 		"chainId": 250,
 		"logoURI": "https://assets.spookyswap.finance/tokens/wFTM.png"
-	},
-	{
+	}, {
 		"name": "0xDAO",
 		"address": "0xc165d941481e68696f43EE6E99BFB2B23E0E3114",
 		"symbol": "OXD",
 		"decimals": 18,
 		"chainId": 250,
 		"logoURI": "https://assets.coingecko.com/coins/images/22888/large/rjks-OoT_400x400.jpg"
-	},
-	{
+	}, {
 		"name": "Radial",
 		"address": "0x79360af49edd44f3000303ae212671ac94bb8ba7",
 		"symbol": "RDL",
 		"decimals": 18,
 		"chainId": 250,
 		"logoURI": ""
-	},
-	{
+	}, {
 		"name": "Synapse",
 		"address": "0xE55e19Fb4F2D85af758950957714292DAC1e25B2",
 		"symbol": "SYN",
 		"decimals": 18,
 		"chainId": 250,
 		"logoURI": "https://assets.coingecko.com/coins/images/18024/large/syn.png"
-	},
-	{
+	}, {
 		"name": "veDAO Token",
 		"address": "0x911da02c1232a3c3e1418b834a311921143b04d7",
 		"symbol": "WeVE",
 		"decimals": 18,
 		"chainId": 250,
 		"logoURI": "https://assets.coingecko.com/coins/images/22741/large/S0aENDh0_400x400.jpg"
-	},
-	{
+	}, {
 		"name": "Frax Share",
 		"address": "0x7d016eec9c25232b01F23EF992D98ca97fc2AF5a",
 		"symbol": "FXS",
 		"decimals": 18,
 		"chainId": 250,
 		"logoURI": "https://assets.coingecko.com/coins/images/13423/large/frax_share.png"
-	},
-	{
+	}, {
 		"name": "renBTC",
 		"address": "0xDBf31dF14B66535aF65AaC99C32e9eA844e14501",
 		"symbol": "renBTC",
 		"decimals": 8,
 		"chainId": 250,
 		"logoURI": "https://assets.coingecko.com/coins/images/11370/large/Bitcoin.jpg"
-	},
-	{
+	}, {
 		"name": "rainSpirit",
 		"address": "0xf9c6e3C123f0494A4447100bD7dbd536F43CC33A",
 		"symbol": "RAINSPIRIT",
 		"decimals": 8,
 		"chainId": 250,
 		"logoURI": ""
+	}, {
+		"name": "Supernova Token",
+		"symbol": "SNT",
+		"address": "0x69D17C151EF62421ec338a0c92ca1c1202A427EC",
+		"chainId": 250,
+		"decimals": 18,
+		"logoURI": "https://assets.spookyswap.finance/tokens/SNT.png"
+	}, {
+		"name": "Monster",
+		"symbol": "MST",
+		"address": "0x152888854378201e173490956085c711f1DeD565",
+		"chainId": 250,
+		"decimals": 18,
+		"logoURI": "https://assets.spookyswap.finance/tokens/MST.png"
+	}, {
+		"name": "Ducat",
+		"symbol": "DUCAT",
+		"address": "0xc3118248e7A3b2c103D87392Fca5EB6ED8DaA754",
+		"chainId": 250,
+		"decimals": 18,
+		"logoURI": "https://assets.spookyswap.finance/tokens/DUCAT.png"
+	}, {
+		"name": "OpenOcean",
+		"symbol": "OOE",
+		"address": "0x9d8F97A3C2f9f397B6D46Cbe2d39CC1D8Cf19010",
+		"chainId": 250,
+		"decimals": 18,
+		"logoURI": "https://assets.spookyswap.finance/tokens/OOE.png"
+	}, {
+		"name": "DexBrowser",
+		"symbol": "BRO",
+		"address": "0x230576a0455d7Ae33c6dEfE64182C0BB68bAFAF3",
+		"chainId": 250,
+		"decimals": 18,
+		"logoURI": "https://assets.spookyswap.finance/tokens/BRO.png"
+	}, {
+		"name": "PaintSwap Token",
+		"symbol": "BRUSH",
+		"address": "0x85dec8c4B2680793661bCA91a8F129607571863d",
+		"chainId": 250,
+		"decimals": 18,
+		"logoURI": "https://assets.spookyswap.finance/tokens/BRUSH.png"
+	}, {
+		"name": "Onx.finance",
+		"symbol": "ONX",
+		"address": "0x27749e79Ad796c4251E0A0564AeF45235493a0b6",
+		"chainId": 250,
+		"decimals": 18,
+		"logoURI": "https://assets.spookyswap.finance/tokens/ONX.png"
+	}, {
+		"name": "WingSwap",
+		"symbol": "WIS",
+		"address": "0xF24be6c063Bee7c7844dD90a21fdf7d783d41a94",
+		"chainId": 250,
+		"decimals": 18,
+		"logoURI": "https://assets.spookyswap.finance/tokens/WIS.png"
+	}, {
+		"name": "Avalanche",
+		"symbol": "AVAX",
+		"address": "0x511D35c52a3C244E7b8bd92c0C297755FbD89212",
+		"chainId": 250,
+		"decimals": 18,
+		"logoURI": "https://assets.spookyswap.finance/tokens/AVAX.png"
+	}, {
+		"name": "Polygon",
+		"symbol": "MATIC",
+		"address": "0x40DF1Ae6074C35047BFF66675488Aa2f9f6384F3",
+		"chainId": 250,
+		"decimals": 18,
+		"logoURI": "https://assets.spookyswap.finance/tokens/MATIC.png"
+	}, {
+		"name": "Scary Chain Capital",
+		"symbol": "SCC",
+		"address": "0xa231D452e4bCA86672FD6109de94688d1E17Aae5",
+		"chainId": 250,
+		"decimals": 9,
+		"logoURI": "https://assets.spookyswap.finance/tokens/SCC.png"
+	}, {
+		"name": "Hundred Finance",
+		"symbol": "HND",
+		"address": "0x10010078a54396F62c96dF8532dc2B4847d47ED3",
+		"chainId": 250,
+		"decimals": 18,
+		"logoURI": "https://assets.spookyswap.finance/tokens/HND.png"
+	}, {
+		"name": "Creditum",
+		"symbol": "CREDIT",
+		"address": "0x77128DFdD0ac859B33F44050c6fa272F34872B5E",
+		"chainId": 250,
+		"decimals": 18,
+		"logoURI": "https://assets.spookyswap.finance/tokens/CREDIT.png"
+	}, {
+		"name": "Creditum USD",
+		"symbol": "cUSD",
+		"address": "0xE3a486C1903Ea794eED5d5Fa0C9473c7D7708f40",
+		"chainId": 250,
+		"decimals": 18,
+		"logoURI": "https://assets.spookyswap.finance/tokens/cUSD.png"
+	}, {
+		"name": "LIQR",
+		"symbol": "LIQR",
+		"address": "0x33333ee26a7d02e41c33828B42Fb1E0889143477",
+		"chainId": 250,
+		"decimals": 18,
+		"logoURI": "https://assets.spookyswap.finance/tokens/LIQR.png"
+	}, {
+		"name": "SUPA Foundation",
+		"symbol": "SUPA",
+		"address": "0x59D07a115fe3FFe5db3D52029D43Cc0ef5e9ba08",
+		"chainId": 250,
+		"decimals": 18,
+		"logoURI": "https://assets.spookyswap.finance/tokens/SUPA.png"
+	}, {
+		"name": "Thorstarter Token",
+		"symbol": "XRUNE",
+		"address": "0xe1e6B01aE86Ad82B1F1B4EB413B219aC32E17Bf6",
+		"chainId": 250,
+		"decimals": 18,
+		"logoURI": "https://assets.spookyswap.finance/tokens/XRUNE.png"
+	}, {
+		"name": "Modefi",
+		"symbol": "MOD",
+		"address": "0xe64B9fd040D1F9D4715C645e0D567EF69958D3D9",
+		"chainId": 250,
+		"decimals": 18,
+		"logoURI": "https://assets.spookyswap.finance/tokens/MOD.png"
+	}, {
+		"name": "Statera",
+		"symbol": "STA",
+		"address": "0x89D5e71E275B4bE094Df9551627BCF4E3b24cE22",
+		"chainId": 250,
+		"decimals": 18,
+		"logoURI": "https://assets.spookyswap.finance/tokens/STA.png"
+	}, {
+		"name": "FTMLaunch",
+		"symbol": "FTML",
+		"address": "0x9613288dCF37c14324AB64EB53b2e7Be7292d724",
+		"chainId": 250,
+		"decimals": 18,
+		"logoURI": "https://assets.spookyswap.finance/tokens/FTML.png"
+	}, {
+		"name": "2omb Token",
+		"symbol": "2OMB",
+		"address": "0x7a6e4E3CC2ac9924605DCa4bA31d1831c84b44aE",
+		"chainId": 250,
+		"decimals": 18,
+		"logoURI": "https://assets.spookyswap.finance/tokens/2OMB.png"
+	}, {
+		"name": "Atlas Cloud",
+		"symbol": "ATLAS",
+		"address": "0x92df3eaBf7c1c2A6b3D5793f6d53778eA78c48b2",
+		"chainId": 250,
+		"decimals": 18,
+		"logoURI": "https://assets.spookyswap.finance/tokens/Atlas.png"
+	}, {
+		"name": "Fantom Lory Token",
+		"symbol": "fLORY",
+		"address": "0x05cE3E76EDe285D6ed2507D5472CA1c061Ac9a8c",
+		"chainId": 250,
+		"decimals": 18,
+		"logoURI": "https://assets.spookyswap.finance/tokens/fLORY.png"
+	}, {
+		"name": "2SHARE Token",
+		"symbol": "2SHARES",
+		"address": "0xc54A1684fD1bef1f077a336E6be4Bd9a3096a6Ca",
+		"chainId": 250,
+		"decimals": 18,
+		"logoURI": "https://assets.spookyswap.finance/tokens/2SHARES.png"
+	}, {
+		"name": "Power",
+		"symbol": "POWER",
+		"address": "0x131c7afb4E5f5c94A27611f7210dfEc2215E85Ae",
+		"chainId": 250,
+		"decimals": 18,
+		"logoURI": "https://assets.spookyswap.finance/tokens/POWER.png"
+	}, {
+		"name": "DefiLaunch Token",
+		"symbol": "fDLAUNCH",
+		"address": "0xEF393310B708761E3B6B59813EF41FE45D853CeC",
+		"chainId": 250,
+		"decimals": 18,
+		"logoURI": "https://assets.spookyswap.finance/tokens/fDLAUNCH.png"
+	}, {
+		"name": "agEUR",
+		"symbol": "agEUR",
+		"address": "0x02a2b736F9150d36C0919F3aCEE8BA2A92FBBb40",
+		"chainId": 250,
+		"decimals": 18,
+		"logoURI": "https://assets.spookyswap.finance/tokens/agEUR.png"
+	}, {
+		"name": "Poseidon",
+		"symbol": "POS",
+		"address": "0x4ae3Fa715E21f328c2B61c037B9CC1761B6aF0bD",
+		"chainId": 250,
+		"decimals": 18,
+		"logoURI": "https://assets.spookyswap.finance/tokens/POS.png"
+	}, {
+		"name": "BeethovenxToken",
+		"symbol": "BEETS",
+		"address": "0xF24Bcf4d1e507740041C9cFd2DddB29585aDCe1e",
+		"chainId": 250,
+		"decimals": 18,
+		"logoURI": "https://assets.spookyswap.finance/tokens/BEETS.png"
+	}, {
+		"name": "IronBank",
+		"symbol": "IB",
+		"address": "0x00a35FD824c717879BF370E70AC6868b95870Dfb",
+		"chainId": 250,
+		"decimals": 18,
+		"logoURI": "https://assets.spookyswap.finance/tokens/IB.png"
+	}, {
+		"name": "War Bond Token",
+		"symbol": "WBOND",
+		"address": "0x59c6606ED2AF925F270733e378D6aF7829B5b3cf",
+		"chainId": 250,
+		"decimals": 18,
+		"logoURI": "https://assets.spookyswap.finance/tokens/WBOND.png"
+	}, {
+		"name": "Kanpeki",
+		"symbol": "KAE",
+		"address": "0x65Def5029A0e7591e46B38742bFEdd1Fb7b24436",
+		"chainId": 250,
+		"decimals": 18,
+		"logoURI": "https://assets.spookyswap.finance/tokens/KAE.png"
+	}, {
+		"name": "5table Token",
+		"symbol": "5TABLE",
+		"address": "0x14d6111dbfD64CEb9676a494BF86AA9f7DD54acC",
+		"chainId": 250,
+		"decimals": 18,
+		"logoURI": "https://assets.spookyswap.finance/tokens/5TABLE.png"
+	}, {
+		"name": "OneRing",
+		"symbol": "RING",
+		"address": "0x582423C10c9e83387a96d00A69bA3D11ee47B7b5",
+		"chainId": 250,
+		"decimals": 18,
+		"logoURI": "https://assets.spookyswap.finance/tokens/RING.png"
+	}, {
+		"name": "3OMB Token",
+		"symbol": "3OMB",
+		"address": "0x14DEf7584A6c52f470Ca4F4b9671056b22f4FfDE",
+		"chainId": 250,
+		"decimals": 18,
+		"logoURI": "https://assets.spookyswap.finance/tokens/3OMB.png"
+	}, {
+		"name": "3SHARE Token",
+		"symbol": "3SHARES",
+		"address": "0x6437ADAC543583C4b31Bf0323A0870430F5CC2e7",
+		"chainId": 250,
+		"decimals": 18,
+		"logoURI": "https://assets.spookyswap.finance/tokens/3HARES.png"
+	}, {
+		"name": "Lucidao",
+		"symbol": "LCD",
+		"address": "0xc2A45FE7d40bCAc8369371B08419DDAFd3131b4a",
+		"chainId": 250,
+		"decimals": 18,
+		"logoURI": "https://assets.spookyswap.finance/tokens/LCD.png"
+	}, {
+		"name": "DEAPCOIN",
+		"symbol": "DEP",
+		"address": "0x8dFDC61c7c7551D0DEec950A2822eB59cddb8f59",
+		"chainId": 250,
+		"decimals": 18,
+		"logoURI": "https://assets.spookyswap.finance/tokens/DEP.png"
+	}, {
+		"name": "Ripae",
+		"symbol": "PAE",
+		"address": "0x8a41f13a4FaE75ca88B1ee726ee9D52B148b0498",
+		"chainId": 250,
+		"decimals": 18,
+		"logoURI": "https://assets.spookyswap.finance/tokens/PAE.png"
+	}, {
+		"name": "pFTM",
+		"symbol": "pFTM",
+		"address": "0x112dF7E3b4B7Ab424F07319D4E92F41e6608c48B",
+		"chainId": 250,
+		"decimals": 18,
+		"logoURI": "https://assets.spookyswap.finance/tokens/pFTM.png"
+	}, {
+		"name": "NOKU v2",
+		"symbol": "NOKU",
+		"address": "0xfB4D42BEd5618fb1a377DDB64EB56B92a6d117f2",
+		"chainId": 250,
+		"decimals": 18,
+		"logoURI": "https://assets.spookyswap.finance/tokens/NOKU.png"
+	}, {
+		"name": "MagicCraft",
+		"symbol": "MCRT",
+		"address": "0xE705aF5f63fcaBDCDF5016aA838EAaac35D12890",
+		"chainId": 250,
+		"decimals": 9,
+		"logoURI": "https://assets.spookyswap.finance/tokens/MCRT.png"
+	}, {
+		"name": "Tempus",
+		"symbol": "TEMP",
+		"address": "0x1c174f6AB0753162befbB916c69dEF2cc1bfdEc1",
+		"chainId": 250,
+		"decimals": 18,
+		"logoURI": "https://assets.spookyswap.finance/tokens/TEMP.png"
+	}, {
+		"name": "TOR",
+		"symbol": "TOR",
+		"address": "0x74E23dF9110Aa9eA0b6ff2fAEE01e740CA1c642e",
+		"chainId": 250,
+		"decimals": 18,
+		"logoURI": "https://assets.spookyswap.finance/tokens/TOR.png"
+	}, {
+		"name": "Growth-Peg Token",
+		"symbol": "GRO",
+		"address": "0x91F1430833879272643658f8eD07d60257dDf321",
+		"chainId": 250,
+		"decimals": 18,
+		"logoURI": "https://assets.spookyswap.finance/tokens/GRO.png"
+	}, {
+		"name": "AlpacaToken",
+		"symbol": "ALPACA",
+		"address": "0xaD996A45fd2373ed0B10Efa4A8eCB9de445A4302",
+		"chainId": 250,
+		"decimals": 18,
+		"logoURI": "https://assets.spookyswap.finance/tokens/ALPACA.png"
+	}, {
+		"name": "BASED",
+		"symbol": "BASED",
+		"address": "0x8D7d3409881b51466B483B11Ea1B8A03cdEd89ae",
+		"chainId": 250,
+		"decimals": 18,
+		"logoURI": "https://assets.spookyswap.finance/tokens/BASED.png"
+	}, {
+		"name": "BSHARE",
+		"symbol": "BSHARE",
+		"address": "0x49C290Ff692149A4E16611c694fdED42C954ab7a",
+		"chainId": 250,
+		"decimals": 18,
+		"logoURI": "https://assets.spookyswap.finance/tokens/BSHARE.png"
+	}, {
+		"name": "Raini",
+		"symbol": "RAINI",
+		"address": "0xe83dFaaAfd3310474D917583Ae9633B4f68fB036",
+		"chainId": 250,
+		"decimals": 18,
+		"logoURI": "https://assets.spookyswap.finance/tokens/RAINI.png"
 	}
 ]

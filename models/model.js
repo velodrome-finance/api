@@ -17,6 +17,52 @@ if(config.testnet === '1') {
 }
 
 const model = {
+  async mergeTokenLists(req, res, next) {
+    try {
+      let rawdata = fs.readFileSync('token-list.json');
+      let tokenList = JSON.parse(rawdata);
+
+      // get ftm tokens from tokenlists
+      const tokenLists = config.tokenLists
+
+      const promises = tokenLists.map(url => request(url));
+      const listsOfTokens = await Promise.all(promises)
+
+      let tokensLists = listsOfTokens.map((tl) => {
+        try {
+          const json = JSON.parse(tl)
+          return json.tokens
+        } catch(ex) {
+          console.log(ex)
+          return []
+        }
+      }).flat()
+
+      tokensLists = [...tokenList, ...tokensLists]
+
+      const removedDuplpicates = tokensLists.filter((t) => {
+        return t.chainId === 250 && t.decimals !== ''
+      }).filter((value, index, self) =>
+        index === self.findIndex((t) => (
+          t.address === value.address
+        ))
+      )
+
+      // const RedisClient = await redisHelper.connect()
+      // const done = await RedisClient.set('baseAssets', JSON.stringify(removedDuplpicates));
+
+      res.status(205)
+      res.body = { 'status': 200, 'success': true, 'data': removedDuplpicates }
+      return next(null, req, res, next)
+
+    } catch(ex) {
+      console.error(ex)
+      res.status(500)
+      res.body = { 'status': 500, 'success': false, 'data': ex }
+      return next(null, req, res, next)
+    }
+  },
+
   async updateAssets(req, res, next) {
     try {
       if(config.testnet === '1') {
