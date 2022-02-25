@@ -868,5 +868,21 @@
 		"decimals": 18,
 		"chainId": 250,
 		"logoURI": "https://assets.coingecko.com/coins/images/22888/large/rjks-OoT_400x400.jpg"
+	},
+	{
+		"name": "Radial",
+		"address": "0x79360af49edd44f3000303ae212671ac94bb8ba7",
+		"symbol": "RDL",
+		"decimals": 18,
+		"chainId": 250,
+		"logoURI": ""
+	},
+	{
+		"name": "Synapse",
+		"address": "0xE55e19Fb4F2D85af758950957714292DAC1e25B2",
+		"symbol": "SYN",
+		"decimals": 18,
+		"chainId": 250,
+		"logoURI": "https://assets.coingecko.com/coins/images/18024/large/syn.png"
 	}
 ]
