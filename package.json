@@ -12,6 +12,7 @@
   "author": "antonnell.crypto@gmail.com",
   "license": "ISC",
   "dependencies": {
+    "@dopex-io/web3-multicall": "^0.1.5",
     "async": "^3.2.0",
     "bignumber.js": "^9.0.2",
     "body-parser": "^1.17.2",

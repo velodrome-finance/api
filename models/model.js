@@ -5,6 +5,7 @@ const config = require('../config')
 const redisHelper = require('../helpers/redis')
 const BigNumber = require("bignumber.js")
 const fs = require('fs')
+const Multicall = require('@dopex-io/web3-multicall')
 
 const ZERO_ADDRESS = '0x0000000000000000000000000000000000000000'
 const CoinGeckoClient = new CoinGecko()
@@ -161,6 +162,10 @@ const model = {
       const RedisClient = await redisHelper.connect()
 
       const web3 =  new Web3(config.web3.provider);
+      const multicall = new Multicall({
+        multicallAddress: CONTRACTS.MULTICALL_ADDRESS,
+        provider: web3,
+      })
 
       const factoryContract = new web3.eth.Contract(CONTRACTS.FACTORY_ABI, CONTRACTS.FACTORY_ADDRESS)
       const gaugesContract = new web3.eth.Contract(CONTRACTS.GAUGES_ABI, CONTRACTS.GAUGES_ADDRESS)
@@ -174,21 +179,20 @@ const model = {
 
       const ps = await Promise.all(
         arr.map(async (idx) => {
-          const [ pairAddress ] = await Promise.all([
-            factoryContract.methods.allPairs(idx).call()
-          ])
+          const pairAddress = await factoryContract.methods.allPairs(idx).call()
 
           const pairContract = new web3.eth.Contract(CONTRACTS.PAIR_ABI, pairAddress)
 
-          const [ token0Address, token1Address, totalSupply, symbol, decimals, stable, gaugeAddress, gaugeWeight ] = await Promise.all([
-            pairContract.methods.token0().call(),
-            pairContract.methods.token1().call(),
-            pairContract.methods.totalSupply().call(),
-            pairContract.methods.symbol().call(),
-            pairContract.methods.decimals().call(),
-            pairContract.methods.stable().call(),
-            gaugesContract.methods.gauges(pairAddress).call(),
-            gaugesContract.methods.weights(pairAddress).call(),
+          const [ reserves, token0Address, token1Address, totalSupply, symbol, decimals, stable, gaugeAddress, gaugeWeight ] = await multicall.aggregate([
+            pairContract.methods.getReserves(),
+            pairContract.methods.token0(),
+            pairContract.methods.token1(),
+            pairContract.methods.totalSupply(),
+            pairContract.methods.symbol(),
+            pairContract.methods.decimals(),
+            pairContract.methods.stable(),
+            gaugesContract.methods.gauges(pairAddress),
+            gaugesContract.methods.weights(pairAddress),
           ])
 
           const token0 = await model._getBaseAsset(web3, token0Address)
@@ -202,14 +206,16 @@ const model = {
             token0: token0,
             token1: token1,
             totalSupply: BigNumber(totalSupply).div(10**decimals).toFixed(parseInt(decimals)),
+            reserve0: BigNumber(reserves[0]).div(10**decimals).toFixed(parseInt(decimals)),
+            reserve1: BigNumber(reserves[1]).div(10**decimals).toFixed(parseInt(decimals)),
           }
 
           if(gaugeAddress !== ZERO_ADDRESS) {
             const gaugeContract = new web3.eth.Contract(CONTRACTS.GAUGE_ABI, gaugeAddress)
 
-            const [ totalSupply, bribeAddress ] = await Promise.all([
-              gaugeContract.methods.totalSupply().call(),
-              gaugesContract.methods.bribes(gaugeAddress).call()
+            const [ gaugeTotalSupply, bribeAddress ] = await multicall.aggregate([
+              gaugeContract.methods.totalSupply(),
+              gaugesContract.methods.bribes(gaugeAddress)
             ])
 
             const bribeContract = new web3.eth.Contract(CONTRACTS.BRIBE_ABI, bribeAddress)
@@ -222,10 +228,7 @@ const model = {
 
                 const tokenAddress = await bribeContract.methods.rewards(idx).call()
                 const token = await model._getBaseAsset(web3, tokenAddress)
-
-                const [ rewardRate ] = await Promise.all([
-                  bribeContract.methods.rewardRate(tokenAddress).call(),
-                ])
+                const rewardRate = await bribeContract.methods.rewardRate(tokenAddress).call()
 
                 return {
                   token: token,
@@ -243,7 +246,9 @@ const model = {
               address: gaugeAddress,
               bribeAddress: bribeAddress,
               decimals: 18,
-              totalSupply: BigNumber(totalSupply).div(10**18).toFixed(18),
+              totalSupply: BigNumber(gaugeTotalSupply).div(10**18).toFixed(18),
+              reserve0: thePair.totalSupply > 0 ? BigNumber(thePair.reserve0).times(gaugeTotalSupply).div(thePair.totalSupply).toFixed(thePair.token0.decimals) : '0',
+              reserve1: thePair.totalSupply > 0 ? BigNumber(thePair.reserve1).times(gaugeTotalSupply).div(thePair.totalSupply).toFixed(thePair.token1.decimals) : '0',
               weight: BigNumber(gaugeWeight).div(10**18).toFixed(18),
               weightPercent: BigNumber(totalWeight).gt(0) ? BigNumber(gaugeWeight).times(100).div(totalWeight).toFixed(2) : 0,
               bribes: bribes,
@@ -272,6 +277,11 @@ const model = {
     try {
       const RedisClient = await redisHelper.connect()
 
+      const multicall = new Multicall({
+        multicallAddress: CONTRACTS.MULTICALL_ADDRESS,
+        provider: web3,
+      })
+
       const ba = await RedisClient.get('baseAssets');
       const baseAssets = JSON.parse(ba)
 
@@ -298,11 +308,11 @@ const model = {
       const gaugesContract = new web3.eth.Contract(CONTRACTS.GAUGES_ABI, CONTRACTS.GAUGES_ADDRESS)
       const baseAssetContract = new web3.eth.Contract(CONTRACTS.ERC20_ABI, address)
 
-      const [ symbol, decimals, name, isWhitelisted ] = await Promise.all([
-        baseAssetContract.methods.symbol().call(),
-        baseAssetContract.methods.decimals().call(),
-        baseAssetContract.methods.name().call(),
-        gaugesContract.methods.isWhitelisted(address).call()
+      const [ symbol, decimals, name, isWhitelisted ] = await multicall.aggregate([
+        baseAssetContract.methods.symbol(),
+        baseAssetContract.methods.decimals(),
+        baseAssetContract.methods.name(),
+        gaugesContract.methods.isWhitelisted(address)
       ]);
 
       const newBaseAsset = {
