@@ -81,45 +81,139 @@ const model = {
         let tokenList = JSON.parse(rawdata);
 
         const RC = await redisHelper.connect()
+
+        // const reply = await RC.get('pairs');
+        // const pairs = JSON.parse(reply)
+        // const tokenListWithBalances = await model._getAssetPrices(tokenList, pairs)
+
         const d = await RC.set('baseAssets', JSON.stringify(tokenList));
 
         res.status(205)
         res.body = { 'status': 200, 'success': true, 'data': tokenList }
         return next(null, req, res, next)
       }
-
-      // get ftm tokens from tokenlists
-      const tokenLists = config.tokenLists
-
-      const promises = tokenLists.map(url => request(url));
-      const listsOfTokens = await Promise.all(promises)
-      const tokensJSON = JSON.parse(listsOfTokens[0])
-
-      const tokensLists = listsOfTokens.map((tl) => {
-        const json = JSON.parse(tl)
-        return json.tokens
-      }).flat()
-
-      const removedDuplpicates = tokensLists.filter((t) => {
-        return t.chainId === 250 && t.decimals !== ''
-      }).filter((value, index, self) =>
-        index === self.findIndex((t) => (
-          t.address === value.address
-        ))
-      )
-
-      const RedisClient = await redisHelper.connect()
-      const done = await RedisClient.set('baseAssets', JSON.stringify(removedDuplpicates));
-
-      res.status(205)
-      res.body = { 'status': 200, 'success': true, 'data': removedDuplpicates }
-      return next(null, req, res, next)
-
     } catch(ex) {
+      console.log('here3')
       console.error(ex)
       res.status(500)
       res.body = { 'status': 500, 'success': false, 'data': ex }
       return next(null, req, res, next)
+    }
+  },
+
+  async _getAssetPrices(tokenList, pairs) {
+    try {
+      const key = 'ckey_4f9770735d094a659b29728ff7a'
+      const url = `https://api.covalenthq.com/v1/pricing/tickers/?quote-currency=USD&format=JSON&tickers=USDC,FTM&key=${key}`
+      const prices = await request(url)
+      const dd = JSON.parse(prices)
+      const priceList = dd.data.items
+
+      const usdcPrice = priceList.filter((asset) => {
+        return asset.contract_ticker_symbol === 'USDC'
+      }).reduce((asset) => {
+        return asset.quote_rate
+      })
+
+      const ftmPrice = priceList.filter((asset) => {
+        return asset.contract_ticker_symbol === 'FTM'
+      }).reduce((asset) => {
+        return asset.quote_rate
+      })
+
+      const tokenListWithPrices = tokenList.map((token) => {
+        //for ftm and usdc we just return the price we got from covalent
+        if(token.address.toLowerCase() === config.wftm.address.toLowerCase()) {
+          token.priceUSD = ftmPrice.quote_rate
+          return token
+        }
+        if(token.address.toLowerCase() === config.usdc.address.toLowerCase()) {
+          token.priceUSD = usdcPrice.quote_rate
+          return token
+        }
+
+        // get a pair with our base asset (ideally FTM, otherwise we use one of the USD pegs)
+        const tokenPairs = model._getPairsFor(token, pairs)
+
+        // if neither, we set $ value to 0 cause fuck that asset.
+        if(tokenPairs.length === 0) {
+          token.priceUSD = 0
+          return token
+        }
+
+        // once we have the stable and volatile pairs for each, we check which has most liquidity
+        const maxLiquidityPair = tokenPairs.reduce(function(prev, current) {
+          let previousVal = 0
+          let currentVal = 0
+
+          if(prev.token0.address.toLowerCase() === token.address.toLowerCase()) {
+            previousVal = BigNumber(prev.reserve0).toNumber();
+          }
+          if(prev.token1.address.toLowerCase() === token.address.toLowerCase()) {
+            previousVal = BigNumber(prev.reserve1).toNumber();
+          }
+
+          if(current.token0.address.toLowerCase() === token.address.toLowerCase()) {
+            currentVal = BigNumber(current.reserve0).toNumber();
+          }
+          if(current.token1.address.toLowerCase() === token.address.toLowerCase()) {
+            currentVal = BigNumber(current.reserve1).toNumber();
+          }
+
+          return BigNumber(previousVal).gt(currentVal) ? prev : current
+        })
+
+        let price = 0
+        let pairedAssetPrice = 0
+
+        // for most liquidity, we do reserve0*price/reserve1 where reserve1 is our base asset
+        if(maxLiquidityPair.token0.address.toLowerCase() === token.address.toLowerCase()) {
+          if(maxLiquidityPair.token1.address.toLowerCase() === config.wftm.address.toLowerCase()) {
+            pairedAssetPrice = ftmPrice.quote_rate
+          }
+          if(maxLiquidityPair.token1.address.toLowerCase() === config.usdc.address.toLowerCase()) {
+            pairedAssetPrice = usdcPrice.quote_rate
+          }
+          price = BigNumber(BigNumber(maxLiquidityPair.reserve1).div(10**maxLiquidityPair.token1.decimals)).times(pairedAssetPrice).div(BigNumber(maxLiquidityPair.reserve0).div(10**maxLiquidityPair.token0.decimals)).toNumber()
+        } else if(maxLiquidityPair.token1.address.toLowerCase() === token.address.toLowerCase()) {
+          if(maxLiquidityPair.token0.address.toLowerCase() === config.wftm.address.toLowerCase()) {
+            pairedAssetPrice = ftmPrice.quote_rate
+          }
+          if(maxLiquidityPair.token0.address.toLowerCase() === config.usdc.address.toLowerCase()) {
+            pairedAssetPrice = usdcPrice.quote_rate
+          }
+          price = BigNumber(BigNumber(maxLiquidityPair.reserve0).div(10**maxLiquidityPair.token0.decimals)).times(pairedAssetPrice).div(BigNumber(maxLiquidityPair.reserve1).div(10**maxLiquidityPair.token1.decimals)).toNumber()
+        }
+
+        // set price on token
+        token.priceUSD = price
+        return token
+
+        // -- once we have USD prices for our assets, we go to pairs and start populating them with the data
+      })
+
+      return tokenListWithPrices
+
+    } catch (ex) {
+      console.log(ex)
+      return tokenList
+    }
+  },
+
+  _getPairsFor(token, pairs) {
+    try {
+      const relevantPairs = pairs.filter((pair) => {
+        return (
+            (pair.token0.address.toLowerCase() == token.address.toLowerCase() || pair.token1.address.toLowerCase() == token.address.toLowerCase()) &&
+            (pair.token0.address.toLowerCase() == config.wftm.address.toLowerCase() || pair.token1.address.toLowerCase() == config.wftm.address.toLowerCase() ||
+              pair.token0.address.toLowerCase() == config.usdc.address.toLowerCase() || pair.token1.address.toLowerCase() == config.usdc.address.toLowerCase())
+          )
+      })
+
+      return relevantPairs
+    } catch(ex) {
+      console.log(ex)
+      return []
     }
   },
 
@@ -144,7 +238,8 @@ const model = {
   getRouteAssets(req, res, next) {
     try {
       const routeAssets = [
-        config.wftm
+        config.wftm,
+        config.solidSEX
       ]
       res.status(205)
       res.body = { 'status': 200, 'success': true, 'data': routeAssets }

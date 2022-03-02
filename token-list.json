@@ -1245,5 +1245,19 @@
 		"chainId": 250,
 		"decimals": 18,
 		"logoURI": "https://assets.spookyswap.finance/tokens/RAINI.png"
+	}, {
+		"name": "DEUS",
+		"symbol": "DEUS",
+		"address": "0xde5ed76e7c05ec5e4572cfc88d1acea165109e44",
+		"chainId": 250,
+		"decimals": 18,
+		"logoURI": "https://assets.coingecko.com/coins/images/18778/large/deus.png"
+	}, {
+		"name": "DEI",
+		"symbol": "DEI",
+		"address": "0xde12c7959e1a72bbe8a5f7a1dc8f8eef9ab011b3",
+		"chainId": 250,
+		"decimals": 18,
+		"logoURI": "https://assets.coingecko.com/coins/images/18779/large/dei.png"
 	}
 ]

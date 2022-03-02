@@ -28,6 +28,22 @@ const config = {
     "address":"0x21be370d5312f44cb42ce377bc9b8a0cef1a4c83",
     "decimals":18,
     "logoURI":"https://assets.spookyswap.finance/tokens/wFTM.png"
+  },
+  solidSEX: {
+    "chainId":250,
+    "name":"SOLIDsex: Tokenized veSOLID",
+    "symbol":"SOLIDSEX",
+    "address":"0x41adac6c1ff52c5e27568f27998d747f7b69795b",
+    "decimals":18,
+    "logoURI":"https://assets.coingecko.com/coins/images/23992/large/solidSEX.png"
+  },
+  usdc: {
+    "chainId":250,
+    "name":"USD Coin",
+    "symbol":"USDC",
+    "address":"0x04068DA6C83AFCFA0e13ba15A6696662335D5B75",
+    "decimals":6,
+    "logoURI":"https://assets.spookyswap.finance/tokens/USDC.png"
   }
 
 }
