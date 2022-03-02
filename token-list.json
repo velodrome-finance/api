@@ -1,5 +1,12 @@
 [
 	{
+		"chainId": 250,
+		"name": "USD Coin",
+		"symbol": "USDC",
+		"address": "0x04068DA6C83AFCFA0e13ba15A6696662335D5B75",
+		"decimals": 6,
+		"logoURI": "https://assets.spookyswap.finance/tokens/USDC.png"
+	}, {
 		"name": "Solid",
 		"address": "0x888EF71766ca594DED1F0FA3AE64eD2941740A20",
 		"symbol": "SOLID",
@@ -531,13 +538,6 @@
 		"address": "0x9879aBDea01a879644185341F7aF7d8343556B7a",
 		"decimals": 18,
 		"logoURI": "https://assets.spookyswap.finance/tokens/TUSD.png"
-	}, {
-		"chainId": 250,
-		"name": "USD Coin",
-		"symbol": "USDC",
-		"address": "0x04068DA6C83AFCFA0e13ba15A6696662335D5B75",
-		"decimals": 6,
-		"logoURI": "https://assets.spookyswap.finance/tokens/USDC.png"
 	}, {
 		"chainId": 250,
 		"name": "Woofy",
