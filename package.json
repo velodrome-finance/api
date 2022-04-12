@@ -1,0 +1,30 @@
+{
+  "name": "api.solidly.exchange",
+  "version": "1.0.0",
+  "engines": {
+    "node": "0.12.7"
+  },
+  "description": "API for solidly",
+  "main": "index.js",
+  "scripts": {
+    "start": "node api.solidly.js"
+  },
+  "author": "antonnell.crypto@gmail.com",
+  "license": "ISC",
+  "dependencies": {
+    "@dopex-io/web3-multicall": "^0.1.5",
+    "async": "^3.2.0",
+    "bignumber.js": "^9.0.2",
+    "body-parser": "^1.17.2",
+    "coingecko-api": "^1.0.10",
+    "compression": "^1.7.0",
+    "dotenv": "^8.2.0",
+    "express": "^4.15.4",
+    "helmet": "^1.3.0",
+    "http-auth": "^2.4.11",
+    "morgan": "^1.8.2",
+    "redis": "^4.0.2",
+    "request-promise": "^4.2.6",
+    "web3": "^1.3.0"
+  }
+}
