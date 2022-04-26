@@ -7,7 +7,7 @@
   "description": "Velodrome.finance HTTP API",
   "main": "index.js",
   "scripts": {
-    "start": "node api.solidly.js"
+    "start": "node api.js"
   },
   "author": "champs@velodrome.finance",
   "license": "ISC",
