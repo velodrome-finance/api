@@ -102,6 +102,7 @@ const model = {
 
   async _getAssetPrices(tokenList, pairs) {
     try {
+      // TODO: Cleanup this...
       const key = 'ckey_4f9770735d094a659b29728ff7a'
       const url = `https://api.covalenthq.com/v1/pricing/tickers/?quote-currency=USD&format=JSON&tickers=USDC,FTM&key=${key}`
       const prices = await request(url)
@@ -114,6 +115,7 @@ const model = {
         return asset.quote_rate
       })
 
+      // TODO: Make this dynamic, aka sans $FTM, we might need to use $ETH or $OP
       const ftmPrice = priceList.filter((asset) => {
         return asset.contract_ticker_symbol === 'FTM'
       }).reduce((asset) => {
