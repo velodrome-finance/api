@@ -15,4 +15,4 @@ module.exports.GAUGE_ABI = abis.gaugeABI
 module.exports.BRIBE_ABI = abis.bribeABI
 module.exports.TOKEN_ABI = abis.tokenABI
 
-module.exports.MULTICALL_ADDRESS = '0x11473d6e641df17cd6331d45b135e35b49edbea8'
+module.exports.MULTICALL_ADDRESS = '0x2DC0E2aa608532Da689e89e237dF582B783E552C'
