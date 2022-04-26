@@ -8,13 +8,7 @@ const config = {
     provider: process.env.PROVIDER
   },
 
-  redis: {
-    host: process.env.REDIS_HOST,
-    port: process.env.REDIS_PORT,
-    // password: PROCESS.ENV.REDIS_PASSWORD
-  },
-
-  tokenLists: [],
+  tokenLists: process.env.TOKENLISTS.toString().split('|').filter(Boolean),
 
   weth: {
     "chainId":10,

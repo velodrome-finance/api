@@ -2,7 +2,7 @@ const config = require('../config')
 const redis = require('redis');
 
 const RedisClient = redis.createClient({
-  url: `redis://${config.redis.host}:${config.redis.port}`
+  url: process.env.REDIS_URL
 })
 
 const connect = async () => {
@@ -19,6 +19,7 @@ const connect = async () => {
     }
 
     if(!connected) {
+      // TODO: Make it work without a running server
       await RedisClient.connect();
     }
 
