@@ -20,7 +20,7 @@ const config = {
     "chainId":10,
     "name":"Wrapped ETH",
     "symbol":"WETH",
-    "address":"0x21be370d5312f44cb42ce377bc9b8a0cef1a4c83",
+    "address":"0x4200000000000000000000000000000000000006",
     "decimals":18,
     "logoURI":"https://weth.io/img/weth_favi.png"
   },
