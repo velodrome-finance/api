@@ -14,34 +14,21 @@ const config = {
     // password: PROCESS.ENV.REDIS_PASSWORD
   },
 
-  tokenLists: [,
-    'https://raw.githubusercontent.com/SpookySwap/spooky-info/master/src/constants/token/spookyswap.json',
-    'https://raw.githubusercontent.com/DimensionDev/Mask-Token-List/gh-pages/latest/250/tokens.json',
-    'https://unpkg.com/@crocoswap/default-token-list@3.2.1/build/sushiswap-default.tokenlist.json',
-    'https://raw.githubusercontent.com/BoggedFinance/Bogged-Token-List/main/ftm/tokenlist.json'
-  ],
+  tokenLists: [],
 
-  wftm: {
-    "chainId":250,
-    "name":"Wrapped FTM",
-    "symbol":"WFTM",
+  weth: {
+    "chainId":10,
+    "name":"Wrapped ETH",
+    "symbol":"WETH",
     "address":"0x21be370d5312f44cb42ce377bc9b8a0cef1a4c83",
     "decimals":18,
-    "logoURI":"https://assets.spookyswap.finance/tokens/wFTM.png"
-  },
-  solidSEX: {
-    "chainId":250,
-    "name":"SOLIDsex: Tokenized veSOLID",
-    "symbol":"SOLIDSEX",
-    "address":"0x41adac6c1ff52c5e27568f27998d747f7b69795b",
-    "decimals":18,
-    "logoURI":"https://assets.coingecko.com/coins/images/23992/large/solidSEX.png"
+    "logoURI":"https://weth.io/img/weth_favi.png"
   },
   usdc: {
-    "chainId":250,
+    "chainId":10,
     "name":"USD Coin",
     "symbol":"USDC",
-    "address":"0x04068DA6C83AFCFA0e13ba15A6696662335D5B75",
+    "address":"0x7F5c764cBc14f9669B88837ca1490cCa17c31607",
     "decimals":6,
     "logoURI":"https://assets.spookyswap.finance/tokens/USDC.png"
   }

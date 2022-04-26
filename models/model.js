@@ -93,7 +93,6 @@ const model = {
         return next(null, req, res, next)
       }
     } catch(ex) {
-      console.log('here3')
       console.error(ex)
       res.status(500)
       res.body = { 'status': 500, 'success': false, 'data': ex }
@@ -123,7 +122,7 @@ const model = {
 
       const tokenListWithPrices = tokenList.map((token) => {
         //for ftm and usdc we just return the price we got from covalent
-        if(token.address.toLowerCase() === config.wftm.address.toLowerCase()) {
+        if(token.address.toLowerCase() === config.weth.address.toLowerCase()) {
           token.priceUSD = ftmPrice.quote_rate
           return token
         }
@@ -168,7 +167,7 @@ const model = {
 
         // for most liquidity, we do reserve0*price/reserve1 where reserve1 is our base asset
         if(maxLiquidityPair.token0.address.toLowerCase() === token.address.toLowerCase()) {
-          if(maxLiquidityPair.token1.address.toLowerCase() === config.wftm.address.toLowerCase()) {
+          if(maxLiquidityPair.token1.address.toLowerCase() === config.weth.address.toLowerCase()) {
             pairedAssetPrice = ftmPrice.quote_rate
           }
           if(maxLiquidityPair.token1.address.toLowerCase() === config.usdc.address.toLowerCase()) {
@@ -176,7 +175,7 @@ const model = {
           }
           price = BigNumber(BigNumber(maxLiquidityPair.reserve1).div(10**maxLiquidityPair.token1.decimals)).times(pairedAssetPrice).div(BigNumber(maxLiquidityPair.reserve0).div(10**maxLiquidityPair.token0.decimals)).toNumber()
         } else if(maxLiquidityPair.token1.address.toLowerCase() === token.address.toLowerCase()) {
-          if(maxLiquidityPair.token0.address.toLowerCase() === config.wftm.address.toLowerCase()) {
+          if(maxLiquidityPair.token0.address.toLowerCase() === config.weth.address.toLowerCase()) {
             pairedAssetPrice = ftmPrice.quote_rate
           }
           if(maxLiquidityPair.token0.address.toLowerCase() === config.usdc.address.toLowerCase()) {
@@ -205,7 +204,7 @@ const model = {
       const relevantPairs = pairs.filter((pair) => {
         return (
             (pair.token0.address.toLowerCase() == token.address.toLowerCase() || pair.token1.address.toLowerCase() == token.address.toLowerCase()) &&
-            (pair.token0.address.toLowerCase() == config.wftm.address.toLowerCase() || pair.token1.address.toLowerCase() == config.wftm.address.toLowerCase() ||
+            (pair.token0.address.toLowerCase() == config.weth.address.toLowerCase() || pair.token1.address.toLowerCase() == config.weth.address.toLowerCase() ||
               pair.token0.address.toLowerCase() == config.usdc.address.toLowerCase() || pair.token1.address.toLowerCase() == config.usdc.address.toLowerCase())
           )
       })
@@ -238,8 +237,7 @@ const model = {
   getRouteAssets(req, res, next) {
     try {
       const routeAssets = [
-        config.wftm,
-        config.solidSEX
+        config.weth
       ]
       res.status(205)
       res.body = { 'status': 200, 'success': true, 'data': routeAssets }
@@ -264,12 +262,10 @@ const model = {
 
       const factoryContract = new web3.eth.Contract(CONTRACTS.FACTORY_ABI, CONTRACTS.FACTORY_ADDRESS)
       const gaugesContract = new web3.eth.Contract(CONTRACTS.GAUGES_ABI, CONTRACTS.GAUGES_ADDRESS)
-
       const [ allPairsLength, totalWeight ] = await Promise.all([
         factoryContract.methods.allPairsLength().call(),
         gaugesContract.methods.totalWeight().call()
       ])
-
       const arr = Array.from({length: parseInt(allPairsLength)}, (v, i) => i)
 
       const ps = await Promise.all(
