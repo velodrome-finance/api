@@ -248,7 +248,7 @@
     "optimismBridgeAddress": "0x4200000000000000000000000000000000000010"
   }
 },{
-  "address": "0x4200000000000000000000000000000000000006",
+  "address": "0xbC6F6b680bc61e30dB47721c6D1c5cde19C1300d",
   "name": "WETH",
   "symbol": "WETH",
   "decimals": 18,
