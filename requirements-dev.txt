@@ -1,0 +1,7 @@
+-r requirements.txt
+
+# Developer Tools
+flake8
+
+# Testing
+coverage
