@@ -1,5 +1,0 @@
-# Core
-falcon==3.1
-bjoern==3.2.1
-web3
-multicall==0.4
