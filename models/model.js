@@ -42,7 +42,7 @@ const model = {
       tokensLists = [...tokenList, ...tokensLists]
 
       const removedDuplpicates = tokensLists.filter((t) => {
-        return t.chainId === 250 && t.decimals !== ''
+        return t.chainId === 69 && t.decimals !== ''
       }).filter((value, index, self) =>
         index === self.findIndex((t) => (
           t.address === value.address
@@ -103,8 +103,8 @@ const model = {
   async _getAssetPrices(tokenList, pairs) {
     try {
       // TODO: Cleanup this...
-      const key = 'ckey_4f9770735d094a659b29728ff7a'
-      const url = `https://api.covalenthq.com/v1/pricing/tickers/?quote-currency=USD&format=JSON&tickers=USDC,FTM&key=${key}`
+      const key = 'ckey_91faa71c47df434497e8890c692'
+      const url = `https://api.covalenthq.com/v1/pricing/tickers/?quote-currency=USD&format=JSON&tickers=USDC,ETH&key=${key}`
       const prices = await request(url)
       const dd = JSON.parse(prices)
       const priceList = dd.data.items
@@ -117,7 +117,7 @@ const model = {
 
       // TODO: Make this dynamic, aka sans $FTM, we might need to use $ETH or $OP
       const ftmPrice = priceList.filter((asset) => {
-        return asset.contract_ticker_symbol === 'FTM'
+        return asset.contract_ticker_symbol === 'WETH'
       }).reduce((asset) => {
         return asset.quote_rate
       })
@@ -413,7 +413,7 @@ const model = {
         symbol: symbol,
         name: name,
         decimals: parseInt(decimals),
-        chainId: 250,
+        chainId: 69,
         logoURI: null,
         isWhitelisted: isWhitelisted
       }
