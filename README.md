@@ -21,9 +21,10 @@ Start the container using:
 $ docker run --env-file .env -p 3000:3000 --rm -it velodrome/api
 ```
 
-## Pairs Update
+## Assets Update
 
 To trigger an assets update, send a request to the `updateAssets` endpoint:
+
 ```
 $ curl -u <AUTH_USER:AUTH_PASS> https://api.endpoint/api/v1/updateAssets
 ```
