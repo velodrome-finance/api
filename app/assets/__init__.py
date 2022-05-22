@@ -50,18 +50,21 @@ class Assets(object):
         key = 'token:%s' % address
         token = CACHE.get(key)
 
+        if type(address) is not str:
+            return None
+
         if token is not None:
             return pickle.loads(token)
 
         for ftoken in cls.tokens():
-            if ftoken['address'] == address:
+            if ftoken['address'].lower() == address.lower():
                 token = ftoken
                 break
 
-        CACHE.setex(key, cls.EXPIRE_IN, pickle.dumps(ftoken))
+        CACHE.setex(key, cls.EXPIRE_IN, pickle.dumps(token))
         LOGGER.debug('Cache updated for %s.', key)
 
-        return ftoken
+        return token
 
     @classmethod
     def _fetch_tokenlists(cls):
@@ -69,8 +72,6 @@ class Assets(object):
         tokens = []
 
         for tlist in TOKENLISTS:
-            tokens = []
-
             try:
                 tres = requests.get(tlist).json()
                 tokens += tres['tokens']

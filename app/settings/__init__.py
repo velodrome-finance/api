@@ -22,6 +22,12 @@ TOKENLISTS = os.getenv('TOKENLISTS', '').split('|')
 DEFAULT_TOKEN_ADDRESS = os.getenv('DEFAULT_TOKEN_ADDRESS')
 STABLE_TOKEN_ADDRESS = os.getenv('STABLE_TOKEN_ADDRESS')
 
+# Will be picked automatically by web3.py
+WEB3_PROVIDER_URI = os.getenv('WEB3_PROVIDER_URI')
+
+FACTORY_ADDRESS = os.getenv('FACTORY_ADDRESS')
+GAUGES_ADDRESS = os.getenv('GAUGES_ADDRESS')
+
 # Placeholder for our cache instance (Redis)
 CACHE = None
 
