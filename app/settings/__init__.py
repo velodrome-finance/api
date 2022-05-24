@@ -4,13 +4,10 @@ from __future__ import absolute_import
 import logging
 import os
 import sys
-import time
 
 import fakeredis
 import redis
 import redis.exceptions
-
-__version__ = (1, 0, 0, 'alpha', int(time.time() / 100))
 
 # Logger setup...
 LOGGER = logging.getLogger(__name__)

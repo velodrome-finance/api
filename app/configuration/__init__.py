@@ -5,17 +5,17 @@ import json
 import falcon
 from versiontools import Version
 
-from assets import Assets
-from settings import CACHE, DEFAULT_TOKEN_ADDRESS, \
-    STABLE_TOKEN_ADDRESS, __version__
+from app import __version__
+from app.assets import Assets
+from app.settings import CACHE, DEFAULT_TOKEN_ADDRESS, STABLE_TOKEN_ADDRESS
 
 
 class Configuration(object):
     """Returns a app configuration object"""
 
     def on_get(self, req, resp):
-        default_token=Assets.token_by_address(DEFAULT_TOKEN_ADDRESS)
-        stable_token=Assets.token_by_address(STABLE_TOKEN_ADDRESS)
+        default_token = Assets.token_by_address(DEFAULT_TOKEN_ADDRESS)
+        stable_token = Assets.token_by_address(STABLE_TOKEN_ADDRESS)
 
         resp.status = falcon.HTTP_200
         resp.text = json.dumps(

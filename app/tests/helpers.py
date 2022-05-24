@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
 
 from falcon import testing
-from ..app import app
+
+from app.app import app
 
 
 class AppTestCase(testing.TestCase):

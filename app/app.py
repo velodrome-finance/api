@@ -5,10 +5,10 @@ import os
 
 import falcon
 
-from .assets import Assets
-from .configuration import Configuration
-from .pairs import Pairs
-from .settings import LOGGER
+from app.assets import Assets
+from app.configuration import Configuration
+from app.pairs import Pairs
+from app.settings import LOGGER
 
 app = falcon.App()
 app.req_options.auto_parse_form_urlencoded = True

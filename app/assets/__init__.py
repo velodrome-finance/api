@@ -6,7 +6,7 @@ import pickle
 import falcon
 import requests
 
-from settings import CACHE, LOGGER, TOKENLISTS
+from app.settings import CACHE, LOGGER, TOKENLISTS
 
 
 class Assets(object):

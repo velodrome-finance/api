@@ -9,8 +9,8 @@ from multicall import Call, Multicall
 from web3.auto import w3
 from web3.constants import ADDRESS_ZERO
 
-from assets import Assets
-from settings import CACHE, LOGGER, FACTORY_ADDRESS, GAUGES_ADDRESS
+from app.assets import Assets
+from app.settings import CACHE, LOGGER, FACTORY_ADDRESS, GAUGES_ADDRESS
 
 
 class DecimalEncoder(json.JSONEncoder):
