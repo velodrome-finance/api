@@ -7,6 +7,7 @@ setup(
     packages=find_packages(include=['app', 'app.*']),
     include_package_data=True,
     install_requires=(
+        'wsgi-request-logger',
         'versiontools',
         'falcon == 3.1',
         'bjoern == 3.2.1',
