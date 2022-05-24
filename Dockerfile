@@ -7,7 +7,7 @@ RUN apt-get clean
 WORKDIR /app
 COPY ./ /app
 
-RUN python app/setup.py install
+RUN pip install -e .
 
 EXPOSE 3000
 
