@@ -11,4 +11,4 @@ RUN pip install -e .
 
 EXPOSE 3000
 
-CMD ["python", "./app/app.py"]
+CMD ["python", "-m", "app.app"]
