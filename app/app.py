@@ -16,13 +16,13 @@ from app.settings import LOGGER
 app = falcon.App(cors_enable=True)
 app.req_options.auto_parse_form_urlencoded = True
 app.req_options.strip_url_path_trailing_slash = True
-app.add_route('/assets', Assets())
-app.add_route('/configuration', Configuration())
-app.add_route('/pairs', Pairs())
+app.add_route('/api/v1/assets', Assets())
+app.add_route('/api/v1/configuration', Configuration())
+app.add_route('/api/v1/pairs', Pairs())
 
 # TODO: Remove when no longer needed for backward-compat...
-app.add_route('/baseAssets', Assets())
-app.add_route('/routeAssets', Configuration())
+app.add_route('/api/v1/baseAssets', Assets())
+app.add_route('/api/v1/routeAssets', Configuration())
 
 # Wrap the app in a WSGI logger to make it more verbose...
 app = WSGILogger(app, [StreamHandler(sys.stdout)], ApacheFormatter())
