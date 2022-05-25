@@ -16,3 +16,8 @@ Finally, to start the container, run:
 ```
 $ docker run --rm --env-file=env.example.copy -v $(pwd):/app -p 3001:3001 -w /app -it velodrome/api
 ```
+
+To run the syncer (refreshes data from chain) process, run:
+```
+$ docker run --rm --env-file=env.example.copy -v $(pwd):/app -p 3001:3001 -w /app -it velodrome/api sh -c 'python -m app.pairs.syncer'
+```

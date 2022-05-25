@@ -3,7 +3,6 @@
 import json
 import pickle
 from decimal import Decimal
-import time
 
 import falcon
 from multicall import Call, Multicall
@@ -65,23 +64,6 @@ class Pairs(object):
         LOGGER.debug('Cache updated for %s (%d items).', __name__, len(pairs))
 
         return pairs
-
-    @classmethod
-    def syncer(cls):
-        """Will schedule _a sync_ every seconds."""
-        while True:
-            LOGGER.info('Syncing pairs...')
-
-            try:
-                cls.pairs(force_sync=True)
-                LOGGER.info('Syncing pairs done.')
-            except Exception as err:
-                LOGGER.error(err)
-                LOGGER.info('Syncing pairs failed!')
-                # Retry...
-                continue
-
-            time.sleep(SYNC_WAIT_SECONDS)
 
     @classmethod
     def from_wei(cls, value):
