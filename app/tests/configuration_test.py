@@ -7,5 +7,5 @@ class ConfigurationTestCase(AppTestCase):
     def test_get(self):
         result = self.simulate_get('/configuration')
 
-        self.assertIsNotNone(result.json['data']['version'])
-        self.assertFalse(result.json['data']['cache'])
+        self.assertIsNotNone(result.json['meta']['version'])
+        self.assertFalse(result.json['meta']['cache'])
