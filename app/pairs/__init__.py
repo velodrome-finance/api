@@ -3,6 +3,7 @@
 import json
 import pickle
 from decimal import Decimal
+import time
 
 import falcon
 from multicall import Call, Multicall
@@ -10,7 +11,9 @@ from web3.auto import w3
 from web3.constants import ADDRESS_ZERO
 
 from app.assets import Assets
-from app.settings import CACHE, LOGGER, FACTORY_ADDRESS, GAUGES_ADDRESS
+from app.settings import (
+    CACHE, LOGGER, FACTORY_ADDRESS, GAUGES_ADDRESS, SYNC_WAIT_SECONDS
+)
 
 
 class DecimalEncoder(json.JSONEncoder):
@@ -23,8 +26,11 @@ class DecimalEncoder(json.JSONEncoder):
 
 class Pairs(object):
     """Handles our liquidity pools/pairs"""
-    # Seconds to expire the cache, ~ the time needed to mine a new block
-    EXPIRE_IN = 60
+    # Seconds to expire the cache, a bit longer than the syncer schedule...
+    if SYNC_WAIT_SECONDS:
+        EXPIRE_IN = SYNC_WAIT_SECONDS * 2
+    else:
+        EXPIRE_IN = 60 * 60
 
     WEEK_IN_SECONDS = 7 * 24 * 60 * 60
 
@@ -47,11 +53,11 @@ class Pairs(object):
         resp.text = pairs
 
     @classmethod
-    def pairs(cls):
+    def pairs(cls, force_sync=False):
         """Fetches and caches liquidity pools/pairs."""
         pairs = CACHE.get(__name__)
 
-        if pairs is not None:
+        if pairs is not None and force_sync is False:
             return pickle.loads(pairs)
 
         pairs = cls._fetch_pairs()
@@ -59,6 +65,23 @@ class Pairs(object):
         LOGGER.debug('Cache updated for %s (%d items).', __name__, len(pairs))
 
         return pairs
+
+    @classmethod
+    def syncer(cls):
+        """Will schedule _a sync_ every seconds."""
+        while True:
+            LOGGER.info('Syncing pairs...')
+
+            try:
+                cls.pairs(force_sync=True)
+                LOGGER.info('Syncing pairs done.')
+            except Exception as err:
+                LOGGER.error(err)
+                LOGGER.info('Syncing pairs failed!')
+                # Retry...
+                continue
+
+            time.sleep(SYNC_WAIT_SECONDS)
 
     @classmethod
     def from_wei(cls, value):
@@ -69,9 +92,6 @@ class Pairs(object):
     def _fetch_pairs(cls):
         """Fetches pairs/pools from chain."""
         pairs = []
-
-        if w3.isConnected():
-            LOGGER.debug('Web3 connection available...')
 
         pairs_count = Call(FACTORY_ADDRESS, 'allPairsLength()(uint256)')()
 
