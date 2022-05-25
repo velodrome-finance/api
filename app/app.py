@@ -20,6 +20,10 @@ app.add_route('/assets', Assets())
 app.add_route('/configuration', Configuration())
 app.add_route('/pairs', Pairs())
 
+# TODO: Remove when no longer needed for backward-compat...
+app.add_route('/baseAssets', Assets())
+app.add_route('/routeAssets', Configuration())
+
 # Wrap the app in a WSGI logger to make it more verbose...
 app = WSGILogger(app, [StreamHandler(sys.stdout)], ApacheFormatter())
 
