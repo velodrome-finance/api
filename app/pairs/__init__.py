@@ -38,10 +38,11 @@ class Pairs(object):
     def on_get(self, req, resp):
         """Returns cached liquidity pools/pairs"""
         pairs = CACHE.get('pairs_json')
+        force = req.get_param('force')
 
         if pairs is None:
             pairs = json.dumps(
-                dict(data=self.pairs()),
+                dict(data=self.pairs(force_sync=force)),
                 cls=DecimalEncoder
             )
 
@@ -52,11 +53,11 @@ class Pairs(object):
         resp.text = pairs
 
     @classmethod
-    def pairs(cls, force_sync=False):
+    def pairs(cls, force_sync=None):
         """Fetches and caches liquidity pools/pairs."""
         pairs = CACHE.get(__name__)
 
-        if pairs is not None and force_sync is False:
+        if pairs is not None and force_sync is None:
             return pickle.loads(pairs)
 
         pairs = cls._fetch_pairs()
