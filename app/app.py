@@ -8,10 +8,14 @@ from logging import StreamHandler
 import falcon
 from requestlogger import WSGILogger, ApacheFormatter
 
-from app.assets import Assets
+from app.assets import Assets, Token
 from app.configuration import Configuration
-from app.pairs import Pairs
+from app.pairs import Pairs, Pair
 from app.settings import LOGGER
+
+# Syncup...
+Token.from_tokenlists()
+Pair.chain_syncup()
 
 app = falcon.App(cors_enable=True)
 app.req_options.auto_parse_form_urlencoded = True
