@@ -1,13 +1,11 @@
 # -*- coding: utf-8 -*-
 
 import json
-import pickle
 
 import falcon
-import requests
-from web3.auto import w3
 
-from app.settings import CACHE, LOGGER, TOKENLISTS
+from app.settings import LOGGER, CACHE
+from .model import Token
 
 
 class Assets(object):
@@ -18,72 +16,15 @@ class Assets(object):
 
     def on_get(self, req, resp):
         """Caches and returns our assets"""
-        assets = CACHE.get('assets_json')
+        assets = CACHE.get('assets:json')
 
         if assets is None:
-            tokens = self.tokens()
+            tokens = map(lambda tok: tok._data, Token.all())
 
-            assets = json.dumps(dict(data=tokens))
+            assets = json.dumps(dict(data=list(tokens)))
 
-            CACHE.setex('assets_json', self.EXPIRE_IN, assets)
-            LOGGER.debug('Cache updated for assets_json.')
+            CACHE.setex('assets:json', self.EXPIRE_IN, assets)
+            LOGGER.debug('Cache updated for assets:json.')
 
         resp.status = falcon.HTTP_200
         resp.text = assets
-
-    @classmethod
-    def tokens(cls):
-        """Caches and returns the cached list of tokens."""
-        tokens = CACHE.get(__name__)
-
-        if tokens is not None:
-            return pickle.loads(tokens)
-
-        tokens = cls._fetch_tokenlists()
-        CACHE.setex(__name__, cls.EXPIRE_IN, pickle.dumps(tokens))
-        LOGGER.debug('Cache updated for %s (%d items).', __name__, len(tokens))
-
-        return tokens
-
-    @classmethod
-    def token_by_address(cls, address):
-        """Caches and returns the token by address."""
-        key = 'token:%s' % address
-        token = CACHE.get(key)
-
-        if type(address) is not str:
-            return None
-
-        if token is not None:
-            return pickle.loads(token)
-
-        for ftoken in cls.tokens():
-            if ftoken['address'].lower() == address.lower():
-                token = ftoken
-                break
-
-        CACHE.setex(key, cls.EXPIRE_IN, pickle.dumps(token))
-        LOGGER.debug('Cache updated for %s.', key)
-
-        return token
-
-    @classmethod
-    def _fetch_tokenlists(cls):
-        """Fetches and merges all the tokens from available tokenlists."""
-        tokens = []
-        our_chain_id = w3.eth.chain_id
-
-        for tlist in TOKENLISTS:
-            try:
-                tres = requests.get(tlist).json()
-                for token_data in tres['tokens']:
-                    # Skip tokens from other chains...
-                    if token_data.get('chainId', None) != our_chain_id:
-                        continue
-
-                    tokens.append(token_data)
-            except Exception as error:
-                LOGGER.error(error)
-                continue
-
-        return tokens

@@ -3,8 +3,17 @@
 import time
 import sys
 
-from app.pairs import Pairs
-from app.settings import LOGGER, SYNC_WAIT_SECONDS
+from app.pairs import Pairs, Pair
+from app.assets import Token
+from app.settings import CACHE, LOGGER, SYNC_WAIT_SECONDS
+
+
+def sync():
+    """Syncs """
+    Token.from_tokenlists()
+    Pair.chain_syncup()
+    # Reset any cache...
+    CACHE.delete(Pairs.CACHE_KEY)
 
 
 if __name__ == '__main__':
@@ -18,10 +27,12 @@ if __name__ == '__main__':
         LOGGER.info('Syncing pairs...')
 
         try:
-            Pairs.pairs(force_sync=True)
+            sync()
             LOGGER.info('Syncing pairs done.')
         except KeyboardInterrupt:
             LOGGER.info('Syncing stopped!')
             break
+        except:  # noqa
+            pass
 
         time.sleep(SYNC_WAIT_SECONDS)

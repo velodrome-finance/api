@@ -14,7 +14,8 @@ setup(
         'web3',
         'multicall @ https://codeload.github.com/velodrome-finance/multicall.py/zip/refs/heads/optimism_version_bump#egg=multicall-0.5.2',  # noqa
         'redis == 4.2.2',
-        'fakeredis == 1.7.4'
+        'fakeredis == 1.7.4',
+        'walrus == 0.9.1'
     ),
     version=":versiontools:app"
 )
