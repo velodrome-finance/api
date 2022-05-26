@@ -5,6 +5,7 @@ import pickle
 
 import falcon
 import requests
+from web3.auto import w3
 
 from app.settings import CACHE, LOGGER, TOKENLISTS
 
@@ -70,11 +71,17 @@ class Assets(object):
     def _fetch_tokenlists(cls):
         """Fetches and merges all the tokens from available tokenlists."""
         tokens = []
+        our_chain_id = w3.eth.chain_id
 
         for tlist in TOKENLISTS:
             try:
                 tres = requests.get(tlist).json()
-                tokens += tres['tokens']
+                for token_data in tres['tokens']:
+                    # Skip tokens from other chains...
+                    if token_data.get('chainId', None) != our_chain_id:
+                        continue
+
+                    tokens.append(token_data)
             except Exception as error:
                 LOGGER.error(error)
                 continue
