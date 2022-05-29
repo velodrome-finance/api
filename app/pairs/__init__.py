@@ -51,9 +51,9 @@ class Pairs(object):
 
         return pairs
 
-    def resync(self, pairs_address, gauge_address):
-        if pairs_address:
-            Pair.from_chain(pairs_address)
+    def resync(self, pair_address, gauge_address):
+        if pair_address:
+            pair = Pair.from_chain(pair_address)
         elif gauge_address:
             gauge = Gauge.from_chain(gauge_address)
             pair = Pair.get(Pair.gauge_address == gauge.address)
@@ -67,7 +67,7 @@ class Pairs(object):
     def on_get(self, req, resp):
         """Returns cached liquidity pools/pairs"""
         self.resync(
-            req.get_param('pairs_address'),
+            req.get_param('pair_address'),
             req.get_param('gauge_address')
         )
 
