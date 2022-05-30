@@ -308,7 +308,7 @@ const model = {
 
             const [ gaugeTotalSupply, bribeAddress ] = await multicall.aggregate([
               gaugeContract.methods.totalSupply(),
-              gaugesContract.methods.bribes(gaugeAddress)
+              gaugesContract.methods.internal_bribes(gaugeAddress)
             ])
 
             const bribeContract = new web3.eth.Contract(CONTRACTS.BRIBE_ABI, bribeAddress)
