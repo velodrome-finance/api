@@ -117,6 +117,9 @@ class Gauge(Model):
             if data['whitelisted'] is False:
                 continue
 
+            if data['amount'] == 0:
+                continue
+
             # Refresh cache if needed...
             token = Token.find(bribe_token_address)
 
@@ -145,7 +148,7 @@ class Gauge(Model):
         token0 = Token.find(pair.token0_address)
         token1 = Token.find(pair.token1_address)
 
-        fees = Multicall([
+        fees_data = Multicall([
             Call(
                 gauge.fees_address,
                 ['left(address)(uint256)', pair.token0_address],
@@ -158,32 +161,28 @@ class Gauge(Model):
             )
         ])()
 
-        fees0, fees1 = fees['fees0'], fees['fees1']
+        fees = [[token0, fees_data['fees0']], [token1, fees_data['fees1']]]
 
-        if gauge.rewards.get(token0.address):
-            gauge.rewards[token0.address] += fees0 / 10**token0.decimals
-        else:
-            gauge.rewards[token0.address] = fees0 / 10**token0.decimals
+        for (token, fee) in fees:
+            if gauge.rewards.get(token.address) and fee > 0:
+                gauge.rewards[token.address] += fee / 10**token.decimals
+            elif fee > 0:
+                gauge.rewards[token.address] = fee / 10**token.decimals
 
-        LOGGER.debug(
-            'Fetched %s:%s reward %s:%s.',
-            cls.__name__,
-            gauge.address,
-            token0.address,
-            gauge.rewards[token0.address]
-        )
-
-        if gauge.rewards.get(token1.address):
-            gauge.rewards[token1.address] += fees1 / 10**token1.decimals
-        else:
-            gauge.rewards[token1.address] = fees1 / 10**token1.decimals
-
-        LOGGER.debug(
-            'Fetched %s:%s reward %s:%s.',
-            cls.__name__,
-            gauge.address,
-            token1.address,
-            gauge.rewards[token0.address]
-        )
+            if fee > 0:
+                LOGGER.debug(
+                    'Fetched %s:%s reward %s:%s.',
+                    cls.__name__,
+                    gauge.address,
+                    token.address,
+                    fee
+                )
+            else:
+                LOGGER.debug(
+                    'Fetched %s:%s and skipped zero reward for %s.',
+                    cls.__name__,
+                    gauge.address,
+                    token.address
+                )
 
         gauge.save()
