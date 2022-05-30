@@ -20,7 +20,7 @@ class Configuration(object):
         resp.status = falcon.HTTP_200
         resp.text = json.dumps(
             dict(
-                data=[default_token._data],
+                data=[default_token._data, stable_token._data],
                 meta=dict(
                     default_token=default_token._data,
                     stable_token=stable_token._data,
