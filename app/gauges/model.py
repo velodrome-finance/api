@@ -4,7 +4,7 @@ from multicall import Call, Multicall
 from walrus import Model, TextField, IntegerField, FloatField, HashField
 from web3.constants import ADDRESS_ZERO
 
-from app.settings import LOGGER, CACHE, GAUGES_ADDRESS
+from app.settings import LOGGER, CACHE, VOTER_ADDRESS
 from app.assets import Token
 
 
@@ -45,8 +45,8 @@ class Gauge(Model):
                 [['total_supply', None]]
             ),
             Call(
-                GAUGES_ADDRESS,
-                ['bribes(address)(address)', address],
+                VOTER_ADDRESS,
+                ['external_rewards(address)(address)', address],
                 [['bribe_address', None]]
             )
         ])
@@ -94,7 +94,7 @@ class Gauge(Model):
                     [['reward_rate', None]]
                 ),
                 Call(
-                    GAUGES_ADDRESS,
+                    VOTER_ADDRESS,
                     ['isWhitelisted(address)(bool)', bribe_token_address],
                     [['whitelisted', None]]
                 )

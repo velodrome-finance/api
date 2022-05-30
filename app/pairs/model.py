@@ -4,7 +4,7 @@ from multicall import Call, Multicall
 from walrus import Model, TextField, IntegerField, BooleanField, FloatField
 from web3.constants import ADDRESS_ZERO
 
-from app.settings import LOGGER, CACHE, FACTORY_ADDRESS, GAUGES_ADDRESS
+from app.settings import LOGGER, CACHE, FACTORY_ADDRESS, VOTER_ADDRESS
 from app.gauges import Gauge
 
 
@@ -77,7 +77,7 @@ class Pair(Model):
             Call(address, 'decimals()(uint8)', [['decimals', None]]),
             Call(address, 'stable()(bool)', [['is_stable', None]]),
             Call(
-                GAUGES_ADDRESS,
+                VOTER_ADDRESS,
                 ['gauges(address)(address)', address],
                 [['gauge_address', None]]
             )

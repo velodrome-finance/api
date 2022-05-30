@@ -23,7 +23,7 @@ STABLE_TOKEN_ADDRESS = os.getenv('STABLE_TOKEN_ADDRESS').lower()
 WEB3_PROVIDER_URI = os.getenv('WEB3_PROVIDER_URI')
 
 FACTORY_ADDRESS = os.getenv('FACTORY_ADDRESS')
-GAUGES_ADDRESS = os.getenv('GAUGES_ADDRESS')
+VOTER_ADDRESS = os.getenv('VOTER_ADDRESS')
 
 # Seconds to wait before running the chain syncup. `0` disables it!
 SYNC_WAIT_SECONDS = int(os.getenv('SYNC_WAIT_SECONDS', 0))
