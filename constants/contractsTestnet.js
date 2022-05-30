@@ -1,13 +1,13 @@
 const abis = require("./abis")
 
-module.exports.FACTORY_ADDRESS = '0xF05e27220a6682aE709b45cBF5a7C585B9b4dd64'
+module.exports.FACTORY_ADDRESS = '0x957A0e6C9c65f5445Aa5dD48F6Db7317E30C4f4d'
 module.exports.FACTORY_ABI = abis.factoryABI
 
-module.exports.ROUTER_ADDRESS = '0x1DA824aC90a8de2EE001eDfe337C3f971eB54521'
+module.exports.ROUTER_ADDRESS = '0x3fc6a36A3EDEFB39cCf527C604Cee288C93e1B51'
 module.exports.ROUTER_ABI = abis.routerABI
 
 // Actually Voter address...
-module.exports.GAUGES_ADDRESS = '0x446C3F12179944D1815FF8b9dEbeDc8A5bE47a9E'
+module.exports.GAUGES_ADDRESS = '0xd37dE0e5BEF3BaBe5c4A3433752C8d44b45BF539'
 module.exports.GAUGES_ABI = abis.gaugesABI
 
 module.exports.ERC20_ABI = abis.erc20ABI
