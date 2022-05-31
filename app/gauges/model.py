@@ -123,7 +123,7 @@ class Gauge(Model):
             # Refresh cache if needed...
             token = Token.find(bribe_token_address)
 
-            gauge.rewards[token.address] = data['amount']
+            gauge.rewards[token.address] = data['amount'] / 10**token.decimals
 
             LOGGER.debug(
                 'Fetched %s:%s reward %s:%s.',
@@ -162,10 +162,12 @@ class Gauge(Model):
         ]
 
         for (token_address, fee) in fees:
+            token = Token.find(token_address)
+
             if gauge.rewards.get(token_address) and fee > 0:
-                gauge.rewards[token_address] += fee
+                gauge.rewards[token_address] += fee / 10**token.decimals
             elif fee > 0:
-                gauge.rewards[token_address] = fee
+                gauge.rewards[token_address] = fee / 10**token.decimals
 
             if fee > 0:
                 LOGGER.debug(
@@ -173,7 +175,7 @@ class Gauge(Model):
                     cls.__name__,
                     gauge.address,
                     token_address,
-                    fee
+                    gauge.rewards[token_address]
                 )
             else:
                 LOGGER.debug(
