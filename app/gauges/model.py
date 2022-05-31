@@ -18,14 +18,14 @@ class Gauge(Model):
     address = TextField(primary_key=True)
     decimals = IntegerField(default=DEFAULT_DECIMALS)
     total_supply = FloatField()
-    bribes_address = TextField(index=True)
+    bribe_address = TextField(index=True)
     fees_address = TextField(index=True)
 
     # Bribes in the form of `token_address => token_amount`...
     rewards = HashField()
 
     # TODO: Backwards compat. Remove once no longer needed...
-    bribesAddress = TextField()
+    bribeAddress = TextField()
     feesAddress = TextField()
     totalSupply = FloatField()
 
@@ -49,7 +49,7 @@ class Gauge(Model):
             Call(
                 VOTER_ADDRESS,
                 ['external_bribes(address)(address)', address],
-                [['bribes_address', None]]
+                [['bribe_address', None]]
             ),
             Call(
                 VOTER_ADDRESS,
@@ -63,7 +63,7 @@ class Gauge(Model):
         data['total_supply'] = data['total_supply'] / data['decimals']
 
         # TODO: Remove once no longer needed...
-        data['bribesAddress'] = data['bribes_address']
+        data['bribeAddress'] = data['bribe_address']
         data['feesAddress'] = data['fees_address']
         data['totalSupply'] = data['total_supply']
 
@@ -76,7 +76,7 @@ class Gauge(Model):
         gauge = cls.create(address=address, **data)
         LOGGER.debug('Fetched %s:%s.', cls.__name__, address)
 
-        if data.get('bribes_address') not in (ADDRESS_ZERO, None):
+        if data.get('bribe_address') not in (ADDRESS_ZERO, None):
             cls._fetch_internal_rewards(gauge)
             cls._fetch_external_rewards(gauge)
 
@@ -86,19 +86,19 @@ class Gauge(Model):
     def _fetch_external_rewards(cls, gauge):
         """Fetches gauge external rewards (bribes) data from chain."""
         tokens_len = Call(
-            gauge.bribes_address,
+            gauge.bribe_address,
             'rewardsListLength()(uint256)'
         )()
 
         for idx in range(0, tokens_len):
             bribe_token_address = Call(
-                gauge.bribes_address,
+                gauge.bribe_address,
                 ['rewards(uint256)(address)', idx]
             )()
 
             bribe_multi = Multicall([
                 Call(
-                    gauge.bribes_address,
+                    gauge.bribe_address,
                     [
                         'left(address)(uint256)',
                         bribe_token_address
