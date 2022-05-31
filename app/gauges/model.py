@@ -77,8 +77,8 @@ class Gauge(Model):
         LOGGER.debug('Fetched %s:%s.', cls.__name__, address)
 
         if data.get('bribe_address') not in (ADDRESS_ZERO, None):
-            cls._fetch_internal_rewards(gauge)
             cls._fetch_external_rewards(gauge)
+            cls._fetch_internal_rewards(gauge)
 
         return gauge
 
@@ -123,30 +123,25 @@ class Gauge(Model):
             # Refresh cache if needed...
             token = Token.find(bribe_token_address)
 
-            reward_amount = data['amount'] / 10**18
-
-            gauge.rewards[token.address] = reward_amount
+            gauge.rewards[token.address] = data['amount']
 
             LOGGER.debug(
                 'Fetched %s:%s reward %s:%s.',
                 cls.__name__,
                 gauge.address,
                 bribe_token_address,
-                reward_amount
+                gauge.rewards[token.address]
             )
 
         gauge.save()
 
     @classmethod
     def _fetch_internal_rewards(cls, gauge):
-        """Fetches gauge external rewards (bribes) data from chain."""
+        """Fetches gauge internal rewards (fees) data from chain."""
         # Avoid circular import...
         from app.pairs.model import Pair
 
         pair = Pair.get(Pair.gauge_address == gauge.address)
-
-        token0 = Token.find(pair.token0_address)
-        token1 = Token.find(pair.token1_address)
 
         fees_data = Multicall([
             Call(
@@ -161,20 +156,23 @@ class Gauge(Model):
             )
         ])()
 
-        fees = [[token0, fees_data['fees0']], [token1, fees_data['fees1']]]
+        fees = [
+            [pair.token0_address, fees_data['fees0']],
+            [pair.token1_address, fees_data['fees1']]
+        ]
 
-        for (token, fee) in fees:
-            if gauge.rewards.get(token.address) and fee > 0:
-                gauge.rewards[token.address] += fee / 10**token.decimals
+        for (token_address, fee) in fees:
+            if gauge.rewards.get(token_address) and fee > 0:
+                gauge.rewards[token_address] += fee
             elif fee > 0:
-                gauge.rewards[token.address] = fee / 10**token.decimals
+                gauge.rewards[token_address] = fee
 
             if fee > 0:
                 LOGGER.debug(
                     'Fetched %s:%s reward %s:%s.',
                     cls.__name__,
                     gauge.address,
-                    token.address,
+                    token_address,
                     fee
                 )
             else:
@@ -182,7 +180,7 @@ class Gauge(Model):
                     'Fetched %s:%s and skipped zero reward for %s.',
                     cls.__name__,
                     gauge.address,
-                    token.address
+                    token_address
                 )
 
         gauge.save()
