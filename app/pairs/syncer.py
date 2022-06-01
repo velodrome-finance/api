@@ -3,9 +3,11 @@
 import time
 import sys
 
+from multicall import Call
+
 from app.pairs import Pairs, Pair
 from app.assets import Token
-from app.settings import CACHE, LOGGER, SYNC_WAIT_SECONDS
+from app.settings import CACHE, LOGGER, SYNC_WAIT_SECONDS, VOTER_ADDRESS
 
 
 def sync():
@@ -14,6 +16,13 @@ def sync():
     Pair.chain_syncup()
     # Reset any cache...
     CACHE.delete(Pairs.CACHE_KEY)
+
+    # Distribute any emissions...
+    Call(
+        VOTER_ADDRESS,
+        ['distribute(uint256,uint256)()', 0, Pair.count()],
+        [[]]
+    )()
 
 
 if __name__ == '__main__':
