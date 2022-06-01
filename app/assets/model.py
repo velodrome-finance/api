@@ -5,7 +5,9 @@ import requests
 from walrus import Model, TextField, IntegerField
 from web3.auto import w3
 
-from app.settings import LOGGER, CACHE, TOKENLISTS
+from app.settings import (
+    LOGGER, CACHE, TOKENLISTS, ROUTER_ADDRESS, STABLE_TOKEN_ADDRESS
+)
 
 
 class Token(Model):
@@ -17,6 +19,26 @@ class Token(Model):
     symbol = TextField()
     decimals = IntegerField()
     logoURI = TextField()
+
+    def chain_price_in_stables(self):
+        """Returns the price quoted from our router in stables/USDC."""
+        # Peg it forever.
+        if self.address == STABLE_TOKEN_ADDRESS:
+            return 1.0
+
+        stablecoin = Token.find(STABLE_TOKEN_ADDRESS)
+
+        amount, is_stable = Call(
+            ROUTER_ADDRESS,
+            [
+                'getAmountOut(uint256,address,address)(uint256,bool)',
+                1 * 10**self.decimals,
+                self.address,
+                stablecoin.address
+            ]
+        )()
+
+        return amount / 10**stablecoin.decimals
 
     @classmethod
     def find(cls, address):
