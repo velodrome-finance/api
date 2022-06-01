@@ -4,7 +4,7 @@ from multicall import Call, Multicall
 from walrus import Model, TextField, IntegerField, FloatField, HashField
 from web3.constants import ADDRESS_ZERO
 
-from app.settings import LOGGER, CACHE, VOTER_ADDRESS
+from app.settings import LOGGER, CACHE, VOTER_ADDRESS, DEFAULT_TOKEN_ADDRESS
 from app.assets import Token
 
 
@@ -20,6 +20,8 @@ class Gauge(Model):
     total_supply = FloatField()
     bribe_address = TextField(index=True)
     fees_address = TextField(index=True)
+    # Per epoch...
+    reward = FloatField()
 
     # Bribes in the form of `token_address => token_amount`...
     rewards = HashField()
@@ -47,6 +49,11 @@ class Gauge(Model):
                 [['total_supply', None]]
             ),
             Call(
+                address,
+                ['left(address)(uint256)', DEFAULT_TOKEN_ADDRESS],
+                [['reward', None]]
+            ),
+            Call(
                 VOTER_ADDRESS,
                 ['external_bribes(address)(address)', address],
                 [['bribe_address', None]]
@@ -61,6 +68,9 @@ class Gauge(Model):
         data = pair_gauge_multi()
         data['decimals'] = cls.DEFAULT_DECIMALS
         data['total_supply'] = data['total_supply'] / data['decimals']
+
+        token = Token.find(DEFAULT_TOKEN_ADDRESS)
+        data['reward'] = data['reward'] / 10**token.decimals
 
         # TODO: Remove once no longer needed...
         data['bribeAddress'] = data['bribe_address']

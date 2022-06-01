@@ -24,6 +24,7 @@ WEB3_PROVIDER_URI = os.getenv('WEB3_PROVIDER_URI')
 
 FACTORY_ADDRESS = os.getenv('FACTORY_ADDRESS')
 VOTER_ADDRESS = os.getenv('VOTER_ADDRESS')
+ROUTER_ADDRESS = os.getenv('ROUTER_ADDRESS')
 
 # Seconds to wait before running the chain syncup. `0` disables it!
 SYNC_WAIT_SECONDS = int(os.getenv('SYNC_WAIT_SECONDS', 0))
