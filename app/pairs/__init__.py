@@ -30,7 +30,6 @@ class Pairs(object):
 
         for pair in Pair.all():
             data = pair._data
-            data['gauge'] = {}
             data['token0'] = Token.find(pair.token0_address)._data
             data['token1'] = Token.find(pair.token1_address)._data
 
