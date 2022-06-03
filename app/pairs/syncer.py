@@ -7,6 +7,7 @@ from multicall import Call
 
 from app.pairs import Pairs, Pair
 from app.assets import Token
+from app.gauges import Gauge
 from app.settings import CACHE, LOGGER, SYNC_WAIT_SECONDS, VOTER_ADDRESS
 
 
@@ -17,10 +18,10 @@ def sync():
     # Reset any cache...
     CACHE.delete(Pairs.CACHE_KEY)
 
-    # Distribute any emissions...
+    # Distribute any emissions to the gauges...
     Call(
         VOTER_ADDRESS,
-        ['distribute(uint256,uint256)()', 0, Pair.count()],
+        ['distribute(uint256,uint256)()', 0, Gauge.count()],
         [[]]
     )()
 
