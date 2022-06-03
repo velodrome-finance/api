@@ -71,6 +71,10 @@ class Pair(Model):
         self.apr = daily_apr * 365
         self.save()
 
+        LOGGER.debug(
+            'APR for %s: %s/%s.', self.address, gauge.reward, self.apr
+        )
+
     @classmethod
     def find(cls, address):
         """Loads a token from cache, of from chain if not found."""

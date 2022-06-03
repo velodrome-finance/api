@@ -65,6 +65,9 @@ class Gauge(Model):
         ])
 
         data = pair_gauge_multi()
+
+        LOGGER.debug('GAUGE %s: %s', address, data)
+
         data['decimals'] = cls.DEFAULT_DECIMALS
         data['total_supply'] = data['total_supply'] / data['decimals']
 
