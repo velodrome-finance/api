@@ -27,9 +27,8 @@ class Pair(Model):
     token0_address = TextField(index=True)
     token1_address = TextField(index=True)
     gauge_address = TextField(index=True)
-    bribe_address = TextField(index=True)
-    tvl = FloatField(default=0)
-    apr = FloatField(default=0)
+    tvl = FloatField()
+    apr = FloatField()
 
     # TODO: Backwards compat. Remove once no longer needed...
     isStable = BooleanField()
@@ -135,6 +134,7 @@ class Pair(Model):
             data['gauge_address'] = None
 
         data['tvl'] = cls._tvl(data, token0, token1)
+        data['apr'] = 0
 
         # TODO: Remove once no longer needed...
         data['isStable'] = data['stable']

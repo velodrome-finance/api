@@ -19,3 +19,14 @@ class PairsTestCase(AppTestCase):
 
         self.assertEqual(type(result.json['data']), list)
         self.assertTrue(len(result.json['data']) > 1)
+
+        found_apr = False
+
+        for pair in result.json['data']:
+            if pair['symbol'] == 'vAMM-VELO/USDC':
+                found_apr = True
+                self.assertTrue(pair['tvl'] > 0)
+                self.assertTrue(pair['apr'] > 0)
+                self.assertTrue(pair['gauge']['reward'] > 0)
+
+        self.assertTrue(found_apr)
