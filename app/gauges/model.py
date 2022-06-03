@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-
 from multicall import Call, Multicall
 from walrus import Model, TextField, IntegerField, FloatField, HashField
 from web3.constants import ADDRESS_ZERO
@@ -175,7 +174,11 @@ class Gauge(Model):
             token = Token.find(token_address)
 
             if gauge.rewards.get(token_address) and fee > 0:
-                gauge.rewards[token_address] += fee / 10**token.decimals
+                gauge.rewards[token_address] = (
+                    float(gauge.rewards[token_address]) + (
+                        fee / 10**token.decimals
+                    )
+                )
             elif fee > 0:
                 gauge.rewards[token_address] = fee / 10**token.decimals
 
