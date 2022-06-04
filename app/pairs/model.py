@@ -62,6 +62,9 @@ class Pair(Model):
 
     def _update_apr(self, gauge):
         """Calculates the pool TVL"""
+        if self.tvl == 0:
+            return
+
         token = Token.find(DEFAULT_TOKEN_ADDRESS)
         token_price = token.chain_price_in_stables()
 
