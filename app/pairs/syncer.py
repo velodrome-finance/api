@@ -1,10 +1,12 @@
 # -*- coding: utf-8 -*-
 
+from concurrent.futures import ThreadPoolExecutor
 from multiprocessing import Process
 import time
-import os
+import sys
 
 from multicall import Call
+from multicall import utils as multicall_utils
 
 from app.pairs import Pairs, Pair
 from app.assets import Token
@@ -14,6 +16,9 @@ from app.settings import LOGGER, SYNC_WAIT_SECONDS, VOTER_ADDRESS
 
 def sync(force_shutdown=False):
     """Syncs """
+    # Use a threaded executor...
+    multicall_utils.process_pool_executor = ThreadPoolExecutor(16)
+
     LOGGER.info('Syncing pairs ...')
     t0 = time.time()
 
@@ -31,31 +36,33 @@ def sync(force_shutdown=False):
 
     LOGGER.info('Syncing pairs done in %s seconds.', time.time() - t0)
 
-    # Multicall hangs so we need to force the event loop shutdown...
-    if force_shutdown:
-        os._exit(os.EX_OK)
+    # Cleanup asyncio leftovers, replace executor to free memory!
+    multicall_utils.process_pool_executor.shutdown(
+        wait=True, cancel_futures=True
+    )
+    multicall_utils.process_pool_executor = ThreadPoolExecutor(16)
 
 
 def sync_forever():
     if SYNC_WAIT_SECONDS < 1:
         LOGGER.info('Syncing is disabled!')
-        os._exit(os.EX_OK)
+        sys.exit(0)
 
     LOGGER.info('Syncing every %s seconds ...', SYNC_WAIT_SECONDS)
 
     while True:
-        LOGGER.debug('start')
-        sync_proc = Process(target=sync, args=(True,))
+        sync_proc = Process(target=sync, args=(False,))
         try:
             sync_proc.start()
             sync_proc.join()
         except KeyboardInterrupt:
-            sync_proc.terminate()
             LOGGER.info('Syncing stopped!')
             break
         except:  # noqa
-            sync_proc.terminate()
+            pass
         finally:
+            sync_proc.terminate()
+            sync_proc.join()
             sync_proc.close()
             del sync_proc
 
