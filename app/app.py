@@ -7,13 +7,14 @@ from logging import StreamHandler
 
 import falcon
 from requestlogger import WSGILogger, ApacheFormatter
+from falcon_compression.middleware import CompressionMiddleware
 
 from app.assets import Assets
 from app.configuration import Configuration
 from app.pairs import Pairs
 from app.settings import LOGGER
 
-app = falcon.App(cors_enable=True)
+app = falcon.App(cors_enable=True, middleware=[CompressionMiddleware()])
 app.req_options.auto_parse_form_urlencoded = True
 app.req_options.strip_url_path_trailing_slash = True
 app.add_route('/api/v1/assets', Assets())
