@@ -27,7 +27,6 @@ class Pair(Model):
     token0_address = TextField(index=True)
     token1_address = TextField(index=True)
     gauge_address = TextField(index=True)
-    bribe_address = TextField(index=True)
     tvl = FloatField(default=0)
     apr = FloatField(default=0)
 
@@ -63,6 +62,9 @@ class Pair(Model):
 
     def _update_apr(self, gauge):
         """Calculates the pool TVL"""
+        if self.tvl == 0:
+            return
+
         token = Token.find(DEFAULT_TOKEN_ADDRESS)
         token_price = token.chain_price_in_stables()
 
