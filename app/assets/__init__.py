@@ -11,20 +11,22 @@ from .model import Token
 class Assets(object):
     """Handles our base/chain assets as a tokenlist"""
 
-    # Seconds to expire the cache
-    EXPIRE_IN = 60 * 60
+    CACHE_KEY = 'assets:json'
+
+    @classmethod
+    def recache(cls):
+        tokens = map(lambda tok: tok._data, Token.all())
+
+        assets = json.dumps(dict(data=list(tokens)))
+
+        CACHE.set(cls.CACHE_KEY, assets)
+        LOGGER.debug('Cache updated for %s.', cls.CACHE_KEY)
+
+        return assets
 
     def on_get(self, req, resp):
         """Caches and returns our assets"""
-        assets = CACHE.get('assets:json')
-
-        if assets is None:
-            tokens = map(lambda tok: tok._data, Token.all())
-
-            assets = json.dumps(dict(data=list(tokens)))
-
-            CACHE.setex('assets:json', self.EXPIRE_IN, assets)
-            LOGGER.debug('Cache updated for assets:json.')
+        assets = CACHE.get(self.CACHE_KEY) or Assets.recache()
 
         resp.status = falcon.HTTP_200
         resp.text = assets
