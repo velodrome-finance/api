@@ -88,7 +88,7 @@ class Pairs(object):
         pairs = CACHE.get(self.CACHE_KEY)
 
         if pairs is None:
-            pairs = Pair.recache()
+            pairs = Pairs.recache()
 
         resp.status = falcon.HTTP_200
         resp.text = pairs
