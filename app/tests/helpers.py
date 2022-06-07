@@ -3,6 +3,11 @@
 from falcon import testing
 
 from app.app import app
+from app.pairs import syncer
+
+
+# Sync the initial data...
+syncer.sync()
 
 
 class AppTestCase(testing.TestCase):
