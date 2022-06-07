@@ -60,8 +60,8 @@ class Pairs(object):
             cls=DecimalEncoder
         )
 
-        CACHE.set(Pairs.CACHE_KEY, pairs)
-        LOGGER.debug('Cache updated for pairs:json.')
+        CACHE.set(cls.CACHE_KEY, pairs)
+        LOGGER.debug('Cache updated for %s.', cls.CACHE_KEY)
 
         return pairs
 
@@ -85,10 +85,7 @@ class Pairs(object):
             req.get_param('gauge_address')
         )
 
-        pairs = CACHE.get(self.CACHE_KEY)
-
-        if pairs is None:
-            pairs = Pairs.recache()
+        pairs = CACHE.get(self.CACHE_KEY) or Pairs.recache()
 
         resp.status = falcon.HTTP_200
         resp.text = pairs
