@@ -25,7 +25,8 @@ class Pairs(object):
 
     CACHE_KEY = 'pairs:json'
 
-    def serialize(self):
+    @classmethod
+    def serialize(cls):
         pairs = []
 
         for pair in Pair.all():
@@ -52,6 +53,18 @@ class Pairs(object):
 
         return pairs
 
+    @classmethod
+    def recache(cls):
+        pairs = json.dumps(
+            dict(data=Pairs.serialize()),
+            cls=DecimalEncoder
+        )
+
+        CACHE.set(Pairs.CACHE_KEY, pairs)
+        LOGGER.debug('Cache updated for pairs:json.')
+
+        return pairs
+
     def resync(self, pair_address, gauge_address):
         if pair_address:
             pair = Pair.from_chain(pair_address)
@@ -63,7 +76,7 @@ class Pairs(object):
         else:
             return
 
-        CACHE.delete(self.CACHE_KEY)
+        Pairs.recache()
 
     def on_get(self, req, resp):
         """Returns cached liquidity pools/pairs"""
@@ -75,13 +88,7 @@ class Pairs(object):
         pairs = CACHE.get(self.CACHE_KEY)
 
         if pairs is None:
-            pairs = json.dumps(
-                dict(data=self.serialize()),
-                cls=DecimalEncoder
-            )
-
-            CACHE.set(self.CACHE_KEY, pairs)
-            LOGGER.debug('Cache updated for pairs:json.')
+            pairs = Pair.recache()
 
         resp.status = falcon.HTTP_200
         resp.text = pairs
