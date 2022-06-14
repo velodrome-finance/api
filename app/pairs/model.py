@@ -68,8 +68,7 @@ class Pair(Model):
         token = Token.find(DEFAULT_TOKEN_ADDRESS)
         token_price = token.chain_price_in_stables()
 
-        weekly_apr = (gauge.reward * token_price) / self.tvl * 100
-        daily_apr = weekly_apr / 7
+        daily_apr = (gauge.reward * token_price) / self.tvl * 100
 
         self.apr = daily_apr * 365
         self.save()

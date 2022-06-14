@@ -12,7 +12,7 @@ class Gauge(Model):
     __database__ = CACHE
 
     DEFAULT_DECIMALS = 18
-    WEEK_IN_SECONDS = 7 * 24 * 60 * 60
+    DAY_IN_SECONDS = 24 * 60 * 60
 
     address = TextField(primary_key=True)
     decimals = IntegerField(default=DEFAULT_DECIMALS)
@@ -49,8 +49,8 @@ class Gauge(Model):
             ),
             Call(
                 address,
-                ['left(address)(uint256)', DEFAULT_TOKEN_ADDRESS],
-                [['reward', None]]
+                ['rewardRate(address)(uint256)', DEFAULT_TOKEN_ADDRESS],
+                [['reward_rate', None]]
             ),
             Call(
                 VOTER_ADDRESS,
@@ -69,7 +69,9 @@ class Gauge(Model):
         data['total_supply'] = data['total_supply'] / data['decimals']
 
         token = Token.find(DEFAULT_TOKEN_ADDRESS)
-        data['reward'] = data['reward'] / 10**token.decimals
+        data['reward'] = (
+            data['reward_rate'] / 10**token.decimals * cls.DAY_IN_SECONDS
+        )
 
         # TODO: Remove once no longer needed...
         data['bribeAddress'] = data['bribe_address']
