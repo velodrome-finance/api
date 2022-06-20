@@ -18,6 +18,7 @@ LOGGER.setLevel(os.getenv('LOGGING_LEVEL', 'DEBUG'))
 TOKENLISTS = os.getenv('TOKENLISTS', '').split('|')
 DEFAULT_TOKEN_ADDRESS = os.getenv('DEFAULT_TOKEN_ADDRESS').lower()
 STABLE_TOKEN_ADDRESS = os.getenv('STABLE_TOKEN_ADDRESS').lower()
+WETH_TOKEN_ADDRESS = os.getenv('WETH_TOKEN_ADDRESS').lower()
 
 # Will be picked automatically by web3.py
 WEB3_PROVIDER_URI = os.getenv('WEB3_PROVIDER_URI')
