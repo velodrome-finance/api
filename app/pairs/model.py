@@ -155,8 +155,8 @@ class Pair(Model):
     @classmethod
     def _tvl(cls, pool_data, token0, token1):
         """Returns the TVL of the pool."""
-        token0_price = token0.chain_price_in_stables()
-        token1_price = token1.chain_price_in_stables()
+        token0_price = token0.aggregated_price_in_stables()
+        token1_price = token1.aggregated_price_in_stables()
 
         tvl = 0
 

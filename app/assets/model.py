@@ -20,6 +20,30 @@ class Token(Model):
     decimals = IntegerField()
     logoURI = TextField()
 
+    # See: https://docs.1inch.io/docs/aggregation-protocol/api/swagger
+    AGGREGATOR_ENDPOINT = 'https://api.1inch.io/v4.0/10/quote'
+
+    def aggregated_price_in_stables(self):
+        """Returns the price quoted from an aggregator in stables/USDC."""
+        # Peg it forever.
+        if self.address == STABLE_TOKEN_ADDRESS:
+            return 1.0
+
+        stablecoin = Token.find(STABLE_TOKEN_ADDRESS)
+
+        res = requests.get(
+            self.AGGREGATOR_ENDPOINT,
+            params=dict(
+                fromTokenAddress=self.address,
+                toTokenAddress=stablecoin.address,
+                amount=(1 * 10**self.decimals)
+            )
+        ).json()
+
+        amount = res.get('toTokenAmount', 0)
+
+        return int(amount) / 10**stablecoin.decimals
+
     def chain_price_in_stables(self):
         """Returns the price quoted from our router in stables/USDC."""
         # Peg it forever.
