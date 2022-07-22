@@ -33,14 +33,19 @@ class Gauge(Model):
     @classmethod
     def find(cls, address):
         """Loads a gauge from cache, of from chain if not found."""
+        if address is None:
+            return None
+
         try:
-            return cls.load(address)
+            return cls.load(address.lower())
         except KeyError:
-            return cls.from_chain(address)
+            return cls.from_chain(address.lower())
 
     @classmethod
     def from_chain(cls, address):
         """Fetches pair/pool gauge data from chain."""
+        address = address.lower()
+
         pair_gauge_multi = Multicall([
             Call(
                 address,

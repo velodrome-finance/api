@@ -67,13 +67,18 @@ class Token(Model):
     @classmethod
     def find(cls, address):
         """Loads a token from the database, of from chain if not found."""
+        if address is None:
+            return None
+
         try:
-            return cls.load(address)
+            return cls.load(address.lower())
         except KeyError:
-            return cls.from_chain(address)
+            return cls.from_chain(address.lower())
 
     @classmethod
     def from_chain(cls, address):
+        address = address.lower()
+
         """Fetches and returns a token from chain."""
         token_multi = Multicall([
             Call(address, ['name()(string)'], [['name', None]]),
