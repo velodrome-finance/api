@@ -8,7 +8,7 @@ import falcon
 from .model import Pair
 from app.assets import Token
 from app.gauges import Gauge
-from app.settings import CACHE, LOGGER
+from app.settings import CACHE, LOGGER, reset_multicall_pool_executor
 
 
 class DecimalEncoder(json.JSONEncoder):
@@ -76,6 +76,7 @@ class Pairs(object):
         else:
             return
 
+        reset_multicall_pool_executor()
         Pairs.recache()
 
     def on_get(self, req, resp):

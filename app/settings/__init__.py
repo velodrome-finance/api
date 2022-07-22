@@ -4,10 +4,23 @@ from __future__ import absolute_import
 import logging
 import os
 import sys
+from concurrent.futures import ThreadPoolExecutor
 
 import fakeredis
+from multicall import utils as multicall_utils
 import redis.exceptions
 from walrus import Database
+
+# Use a threaded executor...
+multicall_utils.process_pool_executor = ThreadPoolExecutor()
+
+def reset_multicall_pool_executor():
+    """Cleanup asyncio leftovers, replace executor to free memory!"""
+    multicall_utils.process_pool_executor.shutdown(
+        wait=True, cancel_futures=True
+    )
+    multicall_utils.process_pool_executor = ThreadPoolExecutor()
+
 
 # Logger setup...
 LOGGER = logging.getLogger(__name__)

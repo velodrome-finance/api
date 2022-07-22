@@ -1,24 +1,21 @@
 # -*- coding: utf-8 -*-
 
-from concurrent.futures import ThreadPoolExecutor
 from multiprocessing import Process
 import time
 import sys
 
 from multicall import Call
-from multicall import utils as multicall_utils
 
 from app.pairs import Pairs, Pair
 from app.assets import Assets, Token
 from app.gauges import Gauge
-from app.settings import LOGGER, SYNC_WAIT_SECONDS, VOTER_ADDRESS
+from app.settings import (
+    LOGGER, SYNC_WAIT_SECONDS, VOTER_ADDRESS, reset_multicall_pool_executor
+)
 
 
 def sync(force_shutdown=False):
     """Syncs """
-    # Use a threaded executor...
-    multicall_utils.process_pool_executor = ThreadPoolExecutor(16)
-
     LOGGER.info('Syncing pairs ...')
     t0 = time.time()
 
@@ -37,11 +34,7 @@ def sync(force_shutdown=False):
 
     LOGGER.info('Syncing pairs done in %s seconds.', time.time() - t0)
 
-    # Cleanup asyncio leftovers, replace executor to free memory!
-    multicall_utils.process_pool_executor.shutdown(
-        wait=True, cancel_futures=True
-    )
-    multicall_utils.process_pool_executor = ThreadPoolExecutor(16)
+    reset_multicall_pool_executor()
 
 
 def sync_forever():
