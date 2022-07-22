@@ -68,6 +68,7 @@ class Pairs(object):
     def resync(self, pair_address, gauge_address):
         if pair_address:
             pair = Pair.from_chain(pair_address)
+            pair.syncup_gauge()
         elif gauge_address:
             gauge = Gauge.from_chain(gauge_address)
             pair = Pair.get(Pair.gauge_address == gauge.address)
