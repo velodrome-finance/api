@@ -14,6 +14,7 @@ from walrus import Database
 # Use a threaded executor...
 multicall_utils.process_pool_executor = ThreadPoolExecutor()
 
+
 def reset_multicall_pool_executor():
     """Cleanup asyncio leftovers, replace executor to free memory!"""
     multicall_utils.process_pool_executor.shutdown(
