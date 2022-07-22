@@ -139,6 +139,8 @@ class Pair(Model):
 
         if data.get('gauge_address') in (ADDRESS_ZERO, None):
             data['gauge_address'] = None
+        else:
+            data['gauge_address'] = data['gauge_address'].lower()
 
         data['tvl'] = cls._tvl(data, token0, token1)
 
