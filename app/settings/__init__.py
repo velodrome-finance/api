@@ -7,6 +7,8 @@ import sys
 from concurrent.futures import ThreadPoolExecutor
 
 import fakeredis
+from honeybadger import honeybadger
+from honeybadger.contrib.logger import HoneybadgerHandler
 from multicall import utils as multicall_utils
 import redis.exceptions
 from walrus import Database
@@ -23,9 +25,28 @@ def reset_multicall_pool_executor():
     multicall_utils.process_pool_executor = ThreadPoolExecutor()
 
 
+def honeybadger_handler(req, resp, exc, params):
+    """Custom error handler for exception notifications."""
+    if exc is None:
+        return
+
+    req_data = dict(
+        remote_address=req.access_route,
+        url=req.uri,
+        method=req.method,
+        content_type=req.content_type,
+        headers=req.headers,
+        params=req.params,
+        query_string=req.query_string
+    )
+
+    honeybadger.notify(exc, context=dict(request=req_data))
+
+
 # Logger setup...
 LOGGER = logging.getLogger(__name__)
 LOGGER.addHandler(logging.StreamHandler(sys.stdout))
+LOGGER.addHandler(HoneybadgerHandler(api_key=os.getenv('HONEYBADGER_API_KEY')))
 LOGGER.setLevel(os.getenv('LOGGING_LEVEL', 'DEBUG'))
 
 # Tokenlists are split with a pipe char (unlikely to be used in URIs)

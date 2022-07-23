@@ -52,8 +52,8 @@ def sync_forever():
         except KeyboardInterrupt:
             LOGGER.info('Syncing stopped!')
             break
-        except:  # noqa
-            pass
+        except Exception as error:
+            LOGGER.error(error)
         finally:
             sync_proc.terminate()
             sync_proc.join()
