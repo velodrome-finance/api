@@ -66,14 +66,14 @@ class Pairs(object):
         return pairs
 
     def resync(self, pair_address, gauge_address):
-        if pair_address:
+        """Resyncs a pair based on it's address or gauge address."""
+        if gauge_address:
+            old_pair = Pair.get(Pair.gauge_address == gauge_address)
+            pair = Pair.from_chain(old_pair.address)
+            pair.syncup_gauge()
+        elif pair_address:
             pair = Pair.from_chain(pair_address)
             pair.syncup_gauge()
-        elif gauge_address:
-            gauge = Gauge.from_chain(gauge_address)
-            pair = Pair.get(Pair.gauge_address == gauge.address)
-            if pair:
-                Pair.from_chain(pair.address)
         else:
             return
 
