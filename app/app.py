@@ -13,11 +13,13 @@ from app.assets import Assets
 from app.configuration import Configuration
 from app.pairs import Pairs
 from app.settings import LOGGER, honeybadger_handler
+from app.venfts import Accounts
 
 app = falcon.App(cors_enable=True, middleware=[CompressionMiddleware()])
 app.add_error_handler(Exception, honeybadger_handler)
 app.req_options.auto_parse_form_urlencoded = True
 app.req_options.strip_url_path_trailing_slash = True
+app.add_route('/api/v1/accounts', Accounts())
 app.add_route('/api/v1/assets', Assets())
 app.add_route('/api/v1/configuration', Configuration())
 app.add_route('/api/v1/pairs', Pairs())
