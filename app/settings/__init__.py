@@ -41,6 +41,10 @@ def honeybadger_handler(req, resp, exc, params):
 
     honeybadger.notify(exc, context=dict(request=req_data))
 
+    # Use default response handler...
+    from ..app import app
+    app._python_error_handler(req, resp, exc, params)
+
 
 # Logger setup...
 LOGGER = logging.getLogger(__name__)
