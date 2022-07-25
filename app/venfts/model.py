@@ -5,6 +5,7 @@ from datetime import datetime
 from multicall import Call, Multicall
 from walrus import Model, TextField, IntegerField, FloatField, DateTimeField
 
+from app.rewards import BribeReward, EmissionReward, FeeReward
 from app.pairs import Gauge, Pair, Token
 from app.settings import (
     LOGGER, CACHE, VE_ADDRESS, VOTER_ADDRESS, REWARDS_DIST_ADDRESS,
@@ -45,14 +46,29 @@ class VeNFT(Model):
             return venfts
 
         calls = []
+        fee_calls = []
+        bribe_calls = []
 
         for token_id in token_ids:
             calls.extend(cls.prepare_chain_calls(token_id))
 
+        for gauge in Gauge.all():
+            pair = Pair.get(Pair.gauge_address == gauge.address)
 
+            calls.extend(EmissionReward.prepare_chain_calls(pair, address))
+
+            for token_id in token_ids:
+                fee_calls.extend(
+                    FeeReward.prepare_chain_calls(pair, gauge, token_id)
+                )
+                bribe_calls.extend(
+                    BribeReward.prepare_chain_calls(pair, gauge, token_id)
+                )
 
         t0 = datetime.utcnow()
         multi_data = Multicall(calls)()
+        multi_fees = Multicall(fee_calls)()
+        multi_bribes = Multicall(bribe_calls)()
         tdelta = datetime.utcnow() - t0
 
         LOGGER.debug(
@@ -71,6 +87,9 @@ class VeNFT(Model):
 
             venfts.append(cls.from_chain_calls(address, token_id, vdata))
 
+        EmissionReward.from_chain_calls(address, multi_data)
+        FeeReward.from_chain_calls(address, multi_fees)
+        BribeReward.from_chain_calls(address, multi_bribes)
 
         return venfts
 
