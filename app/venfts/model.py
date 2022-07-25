@@ -5,7 +5,11 @@ from datetime import datetime
 from multicall import Call, Multicall
 from walrus import Model, TextField, IntegerField, FloatField, DateTimeField
 
-from app.settings import LOGGER, CACHE, VE_ADDRESS, VOTER_ADDRESS
+from app.pairs import Gauge, Pair, Token
+from app.settings import (
+    LOGGER, CACHE, VE_ADDRESS, VOTER_ADDRESS, REWARDS_DIST_ADDRESS,
+    DEFAULT_TOKEN_ADDRESS
+)
 
 
 class NullableDateTimeField(DateTimeField):
@@ -26,77 +30,100 @@ class VeNFT(Model):
     decimals = IntegerField(default=0)
     amount = FloatField(default=0)
     voting_amount = FloatField(default=0)
+    rebase_amount = FloatField(default=0)
     lock_ends_at = NullableDateTimeField(default=None)
     voted_at = NullableDateTimeField(default=None)
 
     @classmethod
     def from_chain(cls, address):
         """Fetches on-chain veNFT data for an account address."""
-        token_ids = cls._fetch_token_ids(address.lower())
+        address = address.lower()
+        token_ids = cls._fetch_token_ids(address)
+        venfts = []
 
         if len(token_ids) == 0:
-            return []
+            return venfts
 
         calls = []
 
         for token_id in token_ids:
-            token_calls = [
-                Call(
-                    VE_ADDRESS,
-                    ['decimals()(uint256)'],
-                    [['token_%s_decimals' % token_id, None]]
-                ),
-                Call(
-                    VE_ADDRESS,
-                    ['balanceOfNFT(uint256)(uint256)', token_id],
-                    [['token_%s_amount' % token_id, None]]
-                ),
-                Call(
-                    VE_ADDRESS,
-                    ['locked(uint256)(int128,uint256)', token_id],
-                    [
-                        ['token_%s_voting_amount' % token_id, None],
-                        ['token_%s_lock_ends_at' % token_id, None]
-                    ]
-                ),
-                Call(
-                    VOTER_ADDRESS,
-                    ['lastVoted(uint256)(uint256)', token_id],
-                    [['token_%s_voted_at' % token_id, None]]
-                ),
-            ]
+            calls.extend(cls.prepare_chain_calls(token_id))
 
-            calls.extend(token_calls)
 
+
+        t0 = datetime.utcnow()
         multi_data = Multicall(calls)()
+        tdelta = datetime.utcnow() - t0
 
-        LOGGER.debug('Fetched %s %ss.', len(token_ids), cls.__name__)
-
-        venfts = []
+        LOGGER.debug(
+            'Fetched data for %s %ss in %s.',
+            len(token_ids),
+            cls.__name__,
+            tdelta
+        )
 
         for token_id in token_ids:
-            token_prefix = 'token_%s_' % token_id
-            token_data = {
+            token_prefix = '|'.join([cls.__name__, str(token_id), ''])
+            vdata = {
                 k.removeprefix(token_prefix): v
                 for (k, v) in multi_data.items() if token_prefix in k
             }
 
-            venfts.append(cls._from_data(address, token_id, token_data))
+            venfts.append(cls.from_chain_calls(address, token_id, vdata))
+
 
         return venfts
 
     @classmethod
-    def _from_data(cls, address, token_id, data):
+    def prepare_chain_calls(cls, token_id):
+        """Returns prepared vote-escrow and voter calls for a token ID."""
+        key_prefix = '|'.join([cls.__name__, str(token_id)])
+
+        return [
+            Call(
+                VE_ADDRESS,
+                ['decimals()(uint256)'],
+                [['%s|decimals' % key_prefix, None]]
+            ),
+            Call(
+                VE_ADDRESS,
+                ['balanceOfNFT(uint256)(uint256)', token_id],
+                [['%s|voting_amount' % key_prefix, None]]
+            ),
+            Call(
+                VE_ADDRESS,
+                ['locked(uint256)(int128,uint256)', token_id],
+                [
+                    ['%s|amount' % key_prefix, None],
+                    ['%s|lock_ends_at' % key_prefix, None]
+                ]
+            ),
+            Call(
+                VOTER_ADDRESS,
+                ['lastVoted(uint256)(uint256)', token_id],
+                [['%s|voted_at' % key_prefix, None]]
+            ),
+            Call(
+                REWARDS_DIST_ADDRESS,
+                ['claimable(uint256)(uint256)', token_id],
+                [['%s|rebase_amount' % key_prefix, None]]
+            )
+        ]
+
+    @classmethod
+    def from_chain_calls(cls, account_address, token_id, data):
         """Imports/creates a veNFT from provided data."""
         # Cleanup old data...
-        try:
-            cls.load(token_id).delete()
-        except KeyError:
-            pass
+        cls.query_delete(cls.token_id == token_id)
 
         data['token_id'] = token_id
-        data['account_address'] = address
+        data['account_address'] = account_address.lower()
         data['amount'] /= (10.0**data['decimals'])
+
+        rebase_token = Token.find(DEFAULT_TOKEN_ADDRESS)
+
+        if data['rebase_amount']:
+            data['rebase_amount'] /= (10.0**rebase_token.decimals)
 
         if data['voting_amount']:
             data['voting_amount'] /= (10.0**data['decimals'])
