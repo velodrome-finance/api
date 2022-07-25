@@ -149,10 +149,7 @@ class Pair(Model):
         data['totalSupply'] = data['total_supply']
 
         # Cleanup old data...
-        try:
-            cls.load(address).delete()
-        except KeyError:
-            pass
+        cls.query_delete(cls.address == address.lower())
 
         pair = cls.create(**data)
         LOGGER.debug('Fetched %s:%s.', cls.__name__, pair.address)
