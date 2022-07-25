@@ -3,6 +3,7 @@
 import json
 import datetime
 import decimal
+import uuid
 
 
 class JSONEncoder(json.JSONEncoder):
@@ -14,5 +15,7 @@ class JSONEncoder(json.JSONEncoder):
             return obj.isoformat()
         elif isinstance(obj, datetime.date):
             return obj.isoformat()
+        elif isinstance(obj, uuid.UUID):
+            return obj.hex
 
         return json.JSONEncoder.default(self, obj)
