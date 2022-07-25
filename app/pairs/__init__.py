@@ -1,22 +1,14 @@
 # -*- coding: utf-8 -*-
 
 import json
-from decimal import Decimal
 
 import falcon
 
 from .model import Pair
 from app.assets import Token
 from app.gauges import Gauge
+from app.misc import JSONEncoder
 from app.settings import CACHE, LOGGER, reset_multicall_pool_executor
-
-
-class DecimalEncoder(json.JSONEncoder):
-    """Custom JSON encoder for decimals."""
-    def default(self, obj):
-        if isinstance(obj, Decimal):
-            return float(obj)
-        return json.JSONEncoder.default(self, obj)
 
 
 class Pairs(object):
@@ -55,10 +47,7 @@ class Pairs(object):
 
     @classmethod
     def recache(cls):
-        pairs = json.dumps(
-            dict(data=Pairs.serialize()),
-            cls=DecimalEncoder
-        )
+        pairs = json.dumps(dict(data=cls.serialize()), cls=JSONEncoder)
 
         CACHE.set(cls.CACHE_KEY, pairs)
         LOGGER.debug('Cache updated for %s.', cls.CACHE_KEY)
