@@ -8,7 +8,6 @@ from concurrent.futures import ThreadPoolExecutor
 
 import fakeredis
 from honeybadger import honeybadger
-from honeybadger.contrib.logger import HoneybadgerHandler
 from multicall import utils as multicall_utils
 import redis.exceptions
 from walrus import Database
@@ -46,7 +45,6 @@ def honeybadger_handler(req, resp, exc, params):
 # Logger setup...
 LOGGER = logging.getLogger(__name__)
 LOGGER.addHandler(logging.StreamHandler(sys.stdout))
-LOGGER.addHandler(HoneybadgerHandler(api_key=os.getenv('HONEYBADGER_API_KEY')))
 LOGGER.setLevel(os.getenv('LOGGING_LEVEL', 'DEBUG'))
 
 # Tokenlists are split with a pipe char (unlikely to be used in URIs)
@@ -62,6 +60,7 @@ FACTORY_ADDRESS = os.getenv('FACTORY_ADDRESS')
 VOTER_ADDRESS = os.getenv('VOTER_ADDRESS')
 ROUTER_ADDRESS = os.getenv('ROUTER_ADDRESS')
 VE_ADDRESS = os.getenv('VE_ADDRESS')
+REWARDS_DIST_ADDRESS = os.getenv('REWARDS_DIST_ADDRESS')
 
 # Seconds to wait before running the chain syncup. `0` disables it!
 SYNC_WAIT_SECONDS = int(os.getenv('SYNC_WAIT_SECONDS', 0))
