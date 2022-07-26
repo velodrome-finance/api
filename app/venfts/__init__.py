@@ -9,7 +9,9 @@ from .model import VeNFT
 from app.pairs import Gauge, Pair, Token
 from app.rewards import BribeReward, EmissionReward, FeeReward
 from app.misc import JSONEncoder
-from app.settings import CACHE, LOGGER, reset_multicall_pool_executor
+from app.settings import (
+    CACHE, DEFAULT_TOKEN_ADDRESS, LOGGER, reset_multicall_pool_executor
+)
 
 
 class Accounts(object):
@@ -20,26 +22,36 @@ class Accounts(object):
     @classmethod
     def serialize(cls, address):
         serialized = []
-        venfts = VeNFT.from_chain(address)
+        to_meta = []
 
+        venfts = VeNFT.from_chain(address)
         reset_multicall_pool_executor()
+
+        default_token = Token.find(DEFAULT_TOKEN_ADDRESS)
+        emissions = EmissionReward.query(
+            EmissionReward.account_address == address
+        )
+
+        for emission in emissions:
+            edata = emission._data
+            edata['token'] = default_token._data
+
+            if emission.pair_address:
+                edata['pair'] = Pair.find(emission.pair_address)._data
+
+            if emission.gauge_address:
+                edata['gauge'] = Gauge.find(emission.gauge_address)._data
+
+            to_meta.append(edata)
 
         for venft in venfts:
             data = venft._data
             data['rewards'] = []
 
             rewards = list(
-                BribeReward.query(BribeReward.account_address == address)
-            )
-            rewards.extend(
-                list(FeeReward.query(FeeReward.account_address == address))
-            )
-            rewards.extend(
-                list(
-                    EmissionReward.query(
-                        EmissionReward.account_address == address
-                    )
-                )
+                BribeReward.query(BribeReward.token_id == venft.token_id)
+            ) + list(
+                FeeReward.query(FeeReward.token_id == venft.token_id)
             )
 
             for reward in rewards:
@@ -61,12 +73,14 @@ class Accounts(object):
 
             serialized.append(data)
 
-        return serialized
+        return serialized, to_meta
 
     @classmethod
     def recache(cls, address):
+        rewards, emissions = cls.serialize(address)
+
         serialized = json.dumps(
-            dict(data=cls.serialize(address)), cls=JSONEncoder
+            dict(data=rewards, meta=emissions), cls=JSONEncoder
         )
 
         CACHE.setex(cls.CACHE_KEY % address, cls.KEEPALIVE, serialized)
