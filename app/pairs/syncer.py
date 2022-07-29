@@ -25,13 +25,6 @@ def sync(force_shutdown=False):
     Pairs.recache()
     Assets.recache()
 
-    # Distribute any emissions to the gauges...
-    Call(
-        VOTER_ADDRESS,
-        ['distribute(uint256,uint256)()', 0, Gauge.count()],
-        [[]]
-    )()
-
     LOGGER.info('Syncing pairs done in %s seconds.', time.time() - t0)
 
     reset_multicall_pool_executor()
