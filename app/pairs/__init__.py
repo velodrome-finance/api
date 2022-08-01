@@ -3,6 +3,7 @@
 import json
 
 import falcon
+from web3 import Web3
 
 from .model import Pair
 from app.assets import Token
@@ -56,11 +57,13 @@ class Pairs(object):
 
     def resync(self, pair_address, gauge_address):
         """Resyncs a pair based on it's address or gauge address."""
-        if gauge_address:
-            old_pair = Pair.get(Pair.gauge_address == gauge_address)
+        if Web3.isAddress(gauge_address):
+            old_pair = Pair.get(
+                Pair.gauge_address == str(gauge_address).lower()
+            )
             pair = Pair.from_chain(old_pair.address)
             pair.syncup_gauge()
-        elif pair_address:
+        elif Web3.isAddress(pair_address):
             pair = Pair.from_chain(pair_address)
             pair.syncup_gauge()
         else:

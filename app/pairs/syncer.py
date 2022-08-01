@@ -4,13 +4,10 @@ from multiprocessing import Process
 import time
 import sys
 
-from multicall import Call
-
 from app.pairs import Pairs, Pair
 from app.assets import Assets, Token
-from app.gauges import Gauge
 from app.settings import (
-    LOGGER, SYNC_WAIT_SECONDS, VOTER_ADDRESS, reset_multicall_pool_executor
+    LOGGER, SYNC_WAIT_SECONDS, reset_multicall_pool_executor
 )
 
 
