@@ -19,8 +19,8 @@ class Configuration(object):
         stable_token = Token.find(STABLE_TOKEN_ADDRESS)
         route_tokens = [Token.find(token) for token in ROUTE_TOKEN_ADDRESSES]
         route_token_data = [token._data for token in route_tokens]
-        tvl = sum(map(lambda p: p.tvl, Pair.all()))
-        max_apr = max(map(lambda p: p.apr, Pair.all()))
+        tvl = sum(map(lambda p: (p.tvl or 0), Pair.all()))
+        max_apr = max(map(lambda p: (p.apr or 0), Pair.all()))
 
         resp.status = falcon.HTTP_200
         resp.text = json.dumps(
