@@ -19,11 +19,11 @@ class AccountsTestCase(AppTestCase):
     def test_get(self):
         result = self.simulate_get(
             '/api/v1/accounts'
-            '?address=0xe247340f06fcb7eb904f16a48c548221375b5b96'
+            '?address=0x278B28459096f17b770ccFF0eaF71195080e89d1'
         )
 
         self.assertEqual(type(result.json['data']), list)
-        self.assertTrue(len(result.json['data']) > 20)
+        self.assertTrue(len(result.json['data']) > 5)
 
         flat_rewards = []
         for venft in result.json['data']:
