@@ -65,6 +65,7 @@ VOTER_ADDRESS = os.getenv('VOTER_ADDRESS')
 ROUTER_ADDRESS = os.getenv('ROUTER_ADDRESS')
 VE_ADDRESS = os.getenv('VE_ADDRESS')
 REWARDS_DIST_ADDRESS = os.getenv('REWARDS_DIST_ADDRESS')
+WRAPPED_BRIBE_FACTORY_ADDRESS = os.getenv('WRAPPED_BRIBE_FACTORY_ADDRESS')
 
 # Seconds to wait before running the chain syncup. `0` disables it!
 SYNC_WAIT_SECONDS = int(os.getenv('SYNC_WAIT_SECONDS', 0))

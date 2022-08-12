@@ -3,7 +3,10 @@ from multicall import Call, Multicall
 from walrus import Model, TextField, IntegerField, FloatField, HashField
 from web3.constants import ADDRESS_ZERO
 
-from app.settings import LOGGER, CACHE, VOTER_ADDRESS, DEFAULT_TOKEN_ADDRESS
+from app.settings import (
+    LOGGER, CACHE, VOTER_ADDRESS,
+    DEFAULT_TOKEN_ADDRESS, WRAPPED_BRIBE_FACTORY_ADDRESS
+)
 from app.assets import Token
 
 
@@ -19,6 +22,7 @@ class Gauge(Model):
     total_supply = FloatField()
     bribe_address = TextField(index=True)
     fees_address = TextField(index=True)
+    wrapped_bribe_address = TextField(index=True)
     # Per epoch...
     reward = FloatField()
 
@@ -83,15 +87,22 @@ class Gauge(Model):
         data['feesAddress'] = data['fees_address']
         data['totalSupply'] = data['total_supply']
 
+        if data.get('bribe_address') not in (ADDRESS_ZERO, None):
+            data['wrapped_bribe_address'] = Call(
+                WRAPPED_BRIBE_FACTORY_ADDRESS,
+                ['oldBribeToNew(address)(address)', data['bribe_address']]
+            )()
+
         # Cleanup old data
         cls.query_delete(cls.address == address.lower())
 
         gauge = cls.create(address=address, **data)
         LOGGER.debug('Fetched %s:%s.', cls.__name__, address)
 
-        if data.get('bribe_address') not in (ADDRESS_ZERO, None):
+        if data.get('wrapped_bribe_address') not in (ADDRESS_ZERO, None):
             cls._fetch_external_rewards(gauge)
-            cls._fetch_internal_rewards(gauge)
+
+        cls._fetch_internal_rewards(gauge)
 
         return gauge
 
@@ -99,7 +110,7 @@ class Gauge(Model):
     def _fetch_external_rewards(cls, gauge):
         """Fetches gauge external rewards (bribes) data from chain."""
         tokens_len = Call(
-            gauge.bribe_address,
+            gauge.wrapped_bribe_address,
             'rewardsListLength()(uint256)'
         )()
 
