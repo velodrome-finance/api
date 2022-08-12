@@ -3,7 +3,6 @@
 from multicall import Call
 from walrus import Model, TextField, IntegerField, FloatField, UUIDField
 
-from app.pairs import Token
 from app.settings import LOGGER, CACHE, DEFAULT_TOKEN_ADDRESS
 
 
@@ -49,9 +48,6 @@ class EmissionReward(Reward):
         if len(data) == 0:
             return []
 
-        # Emissions come in default tokens...
-        token = Token.find(DEFAULT_TOKEN_ADDRESS)
-
         for (key_name, amount) in data.items():
             if not key_name.startswith(cls.__name__) or amount == 0:
                 continue
@@ -63,7 +59,7 @@ class EmissionReward(Reward):
                 account_address=account_address.lower(),
                 pair_address=pair_addr.lower(),
                 gauge_address=gauge_addr.lower(),
-                amount=(amount / 10**token.decimals)
+                amount=amount
             )
 
             rewards.append(reward)
@@ -138,15 +134,13 @@ class FeeReward(Reward):
             _, token_id, pair_addr, gauge_addr, token_addr = \
                 key_name.split('|')
 
-            token = Token.find(token_addr)
-
             reward = cls.create(
                 token_id=int(token_id),
                 token_address=token_addr.lower(),
                 account_address=account_address.lower(),
                 pair_address=pair_addr.lower(),
                 gauge_address=gauge_addr.lower(),
-                amount=(amount / 10**token.decimals)
+                amount=amount
             )
 
             rewards.append(reward)
@@ -178,7 +172,7 @@ class BribeReward(FeeReward):
 
             calls.append(
                 Call(
-                    gauge.bribe_address,
+                    gauge.wrapped_bribe_address,
                     [
                         'earned(address,uint256)(uint256)',
                         bribe_token_addr.decode('utf-8'),
