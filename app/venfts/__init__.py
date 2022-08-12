@@ -16,7 +16,7 @@ from app.settings import (
 
 class Accounts(object):
     """Handles our account veNFTs."""
-    KEEPALIVE = 60 * 30
+    KEEPALIVE = 5
     CACHE_KEY = 'account:%s:json'
 
     @classmethod
@@ -98,6 +98,8 @@ class Accounts(object):
         if not Web3.isAddress(address):
             resp.text = json.dumps(dict(data=[]))
             return
+        else:
+            address = address.lower()
 
         if refresh:
             data = Accounts.recache(address)
