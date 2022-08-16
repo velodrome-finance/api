@@ -116,13 +116,13 @@ class Gauge(Model):
 
         for idx in range(0, tokens_len):
             bribe_token_address = Call(
-                gauge.bribe_address,
+                gauge.wrapped_bribe_address,
                 ['rewards(uint256)(address)', idx]
             )()
 
             bribe_multi = Multicall([
                 Call(
-                    gauge.bribe_address,
+                    gauge.wrapped_bribe_address,
                     [
                         'left(address)(uint256)',
                         bribe_token_address
