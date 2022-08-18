@@ -93,6 +93,9 @@ class Gauge(Model):
                 ['oldBribeToNew(address)(address)', data['bribe_address']]
             )()
 
+        if data.get('wrapped_bribe_address') in (ADDRESS_ZERO, ''):
+            del data['wrapped_bribe_address']
+
         # Cleanup old data
         cls.query_delete(cls.address == address.lower())
 
