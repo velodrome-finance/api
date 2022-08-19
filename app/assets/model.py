@@ -6,7 +6,8 @@ from walrus import Model, TextField, IntegerField
 from web3.auto import w3
 
 from app.settings import (
-    LOGGER, CACHE, TOKENLISTS, ROUTER_ADDRESS, STABLE_TOKEN_ADDRESS
+    LOGGER, CACHE, TOKENLISTS, ROUTER_ADDRESS, STABLE_TOKEN_ADDRESS,
+    IGNORED_TOKEN_ADDRESSES
 )
 
 
@@ -109,6 +110,10 @@ class Token(Model):
                         continue
 
                     token_data['address'] = token_data['address'].lower()
+
+                    if token_data['address'] in IGNORED_TOKEN_ADDRESSES:
+                        continue
+
                     cls.create(**token_data)
 
                     LOGGER.debug(
