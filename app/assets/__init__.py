@@ -17,6 +17,9 @@ class Assets(object):
     def recache(cls):
         tokens = map(lambda tok: tok._data, Token.all())
 
+        # Remove anything that's not in our token lists...
+        tokens = [_t for _t in tokens if _t['logoURI'] is not None]
+
         assets = json.dumps(dict(data=list(tokens)))
 
         CACHE.set(cls.CACHE_KEY, assets)
