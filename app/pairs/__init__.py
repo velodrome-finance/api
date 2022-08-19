@@ -61,11 +61,9 @@ class Pairs(object):
             old_pair = Pair.get(
                 Pair.gauge_address == str(gauge_address).lower()
             )
-            pair = Pair.from_chain(old_pair.address)
-            pair.syncup_gauge()
+            Pair.from_chain(old_pair.address)
         elif Web3.isAddress(pair_address):
-            pair = Pair.from_chain(pair_address)
-            pair.syncup_gauge()
+            Pair.from_chain(pair_address)
         else:
             return
 
