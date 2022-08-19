@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from multiprocessing import Process
+from multiprocessing.pool import ThreadPool
 import time
 import sys
 
@@ -17,7 +18,20 @@ def sync(force_shutdown=False):
     t0 = time.time()
 
     Token.from_tokenlists()
-    Pair.chain_syncup()
+
+    with ThreadPool() as pool:
+        addresses = Pair.chain_addresses()
+
+        LOGGER.debug(
+            'Syncing %s pairs using %s threads...',
+            len(addresses),
+            pool._processes
+        )
+
+        pool.map(Pair.from_chain, addresses)
+        pool.close()
+        pool.join()
+
     # Reset any cache...
     Pairs.recache()
     Assets.recache()

@@ -85,18 +85,20 @@ class Pair(Model):
             return cls.from_chain(address.lower())
 
     @classmethod
-    def chain_syncup(cls):
+    def chain_addresses(cls):
         """Fetches pairs/pools from chain."""
         pairs_count = Call(FACTORY_ADDRESS, 'allPairsLength()(uint256)')()
 
-        for idx in range(0, pairs_count):
-            pair_addr = Call(
+        pairs_multi = Multicall([
+            Call(
                 FACTORY_ADDRESS,
-                ['allPairs(uint256)(address)', idx]
-            )()
+                ['allPairs(uint256)(address)', idx],
+                [[idx, None]]
+            )
+            for idx in range(0, pairs_count)
+        ])
 
-            pair = cls.from_chain(pair_addr)
-            pair.syncup_gauge()
+        return list(pairs_multi().values())
 
     @classmethod
     def from_chain(cls, address):
@@ -153,6 +155,8 @@ class Pair(Model):
 
         pair = cls.create(**data)
         LOGGER.debug('Fetched %s:%s.', cls.__name__, pair.address)
+
+        pair.syncup_gauge()
 
         return pair
 
