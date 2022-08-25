@@ -19,7 +19,7 @@ class AccountsTestCase(AppTestCase):
     def test_get(self):
         result = self.simulate_get(
             '/api/v1/accounts'
-            '?address=0x278B28459096f17b770ccFF0eaF71195080e89d1'
+            '?address=0x892ff98a46e5bd141e2d12618f4b2fe6284debac'
         )
 
         self.assertEqual(type(result.json['data']), list)

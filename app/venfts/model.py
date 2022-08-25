@@ -28,8 +28,9 @@ class VeNFT(Model):
     token_id = IntegerField(primary_key=True)
     account_address = TextField(index=True)
     decimals = IntegerField(default=0)
-    voting_amount = TextField(default=0)
-    rebase_amount = TextField(default=0)
+    amount = TextField()
+    voting_amount = TextField()
+    rebase_amount = TextField()
     lock_ends_at = NullableDateTimeField(default=None)
     voted_at = NullableDateTimeField(default=None)
 
@@ -105,13 +106,13 @@ class VeNFT(Model):
             Call(
                 VE_ADDRESS,
                 ['balanceOfNFT(uint256)(uint256)', token_id],
-                [['%s|voting_amount' % key_prefix, None]]
+                [['%s|voting_amount' % key_prefix, str]]
             ),
             Call(
                 VE_ADDRESS,
                 ['locked(uint256)(int128,uint256)', token_id],
                 [
-                    ['%s|amount' % key_prefix, None],
+                    ['%s|amount' % key_prefix, str],
                     ['%s|lock_ends_at' % key_prefix, None]
                 ]
             ),
@@ -123,7 +124,7 @@ class VeNFT(Model):
             Call(
                 REWARDS_DIST_ADDRESS,
                 ['claimable(uint256)(uint256)', token_id],
-                [['%s|rebase_amount' % key_prefix, None]]
+                [['%s|rebase_amount' % key_prefix, str]]
             )
         ]
 
@@ -135,7 +136,6 @@ class VeNFT(Model):
 
         data['token_id'] = token_id
         data['account_address'] = account_address.lower()
-        data['amount'] /= (10.0**data['decimals'])
 
         if data['voted_at'] != 0:
             data['voted_at'] = datetime.utcfromtimestamp(data['voted_at'])

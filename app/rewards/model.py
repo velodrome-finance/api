@@ -16,7 +16,7 @@ class Reward(Model):
     token_address = TextField(index=True)
     gauge_address = TextField(index=True)
     pair_address = TextField(index=True)
-    amount = TextField(default=0)
+    amount = TextField()
 
 
 class EmissionReward(Reward):
@@ -59,7 +59,7 @@ class EmissionReward(Reward):
                 account_address=account_address.lower(),
                 pair_address=pair_addr.lower(),
                 gauge_address=gauge_addr.lower(),
-                amount=amount
+                amount=str(amount)
             )
 
             rewards.append(reward)
@@ -140,7 +140,7 @@ class FeeReward(Reward):
                 account_address=account_address.lower(),
                 pair_address=pair_addr.lower(),
                 gauge_address=gauge_addr.lower(),
-                amount=amount
+                amount=str(amount)
             )
 
             rewards.append(reward)
