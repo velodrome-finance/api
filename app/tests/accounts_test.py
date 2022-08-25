@@ -23,7 +23,7 @@ class AccountsTestCase(AppTestCase):
         )
 
         self.assertEqual(type(result.json['data']), list)
-        self.assertTrue(len(result.json['data']) > 5)
+        self.assertTrue(len(result.json['data']) > 1)
 
         flat_rewards = []
         for venft in result.json['data']:

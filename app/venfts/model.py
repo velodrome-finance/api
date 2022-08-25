@@ -3,13 +3,12 @@
 from datetime import datetime
 
 from multicall import Call, Multicall
-from walrus import Model, TextField, IntegerField, FloatField, DateTimeField
+from walrus import Model, TextField, IntegerField, DateTimeField
 
 from app.rewards import BribeReward, EmissionReward, FeeReward
-from app.pairs import Gauge, Pair, Token
+from app.pairs import Gauge, Pair
 from app.settings import (
-    LOGGER, CACHE, VE_ADDRESS, VOTER_ADDRESS, REWARDS_DIST_ADDRESS,
-    DEFAULT_TOKEN_ADDRESS
+    LOGGER, CACHE, VE_ADDRESS, VOTER_ADDRESS, REWARDS_DIST_ADDRESS
 )
 
 
@@ -29,9 +28,8 @@ class VeNFT(Model):
     token_id = IntegerField(primary_key=True)
     account_address = TextField(index=True)
     decimals = IntegerField(default=0)
-    amount = FloatField(default=0)
-    voting_amount = FloatField(default=0)
-    rebase_amount = FloatField(default=0)
+    voting_amount = TextField(default=0)
+    rebase_amount = TextField(default=0)
     lock_ends_at = NullableDateTimeField(default=None)
     voted_at = NullableDateTimeField(default=None)
 
@@ -138,14 +136,6 @@ class VeNFT(Model):
         data['token_id'] = token_id
         data['account_address'] = account_address.lower()
         data['amount'] /= (10.0**data['decimals'])
-
-        rebase_token = Token.find(DEFAULT_TOKEN_ADDRESS)
-
-        if data['rebase_amount']:
-            data['rebase_amount'] /= (10.0**rebase_token.decimals)
-
-        if data['voting_amount']:
-            data['voting_amount'] /= (10.0**data['decimals'])
 
         if data['voted_at'] != 0:
             data['voted_at'] = datetime.utcfromtimestamp(data['voted_at'])

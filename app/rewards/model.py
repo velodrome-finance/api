@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from multicall import Call
-from walrus import Model, TextField, IntegerField, FloatField, UUIDField
+from walrus import Model, TextField, IntegerField, UUIDField
 
 from app.settings import LOGGER, CACHE, DEFAULT_TOKEN_ADDRESS
 
@@ -16,7 +16,7 @@ class Reward(Model):
     token_address = TextField(index=True)
     gauge_address = TextField(index=True)
     pair_address = TextField(index=True)
-    amount = FloatField(default=0)
+    amount = TextField(default=0)
 
 
 class EmissionReward(Reward):
