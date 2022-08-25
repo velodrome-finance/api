@@ -92,7 +92,7 @@ class FeeReward(Reward):
                 str(token_id),
                 pair.address,
                 pair.gauge_address,
-                pair.token0_address
+                pair.token1_address
             ]
         )
 
