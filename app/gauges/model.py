@@ -28,6 +28,8 @@ class Gauge(Model):
 
     # Bribes in the form of `token_address => token_amount`...
     rewards = HashField()
+    # Total Bribes Value
+    tbv = FloatField(default=0.0)
 
     # TODO: Backwards compat. Remove once no longer needed...
     bribeAddress = TextField()
@@ -140,6 +142,9 @@ class Gauge(Model):
             token = Token.find(bribe_token_address)
 
             gauge.rewards[token.address] = amount / 10**token.decimals
+
+            token_price = token.aggregated_price_in_stables()
+            gauge.tbv += amount / 10**token.decimals * token_price
 
             LOGGER.debug(
                 'Fetched %s:%s reward %s:%s.',
