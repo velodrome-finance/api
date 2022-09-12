@@ -168,10 +168,8 @@ class Pair(Model):
 
         if token0_price == 0:
             token0_price = token0.chain_price_in_stables()
-        
         if token1_price == 0:
             token1_price = token1.chain_price_in_stables()
-
         tvl = 0
 
         if token0_price != 0:
