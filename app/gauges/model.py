@@ -144,6 +144,9 @@ class Gauge(Model):
             gauge.rewards[token.address] = amount / 10**token.decimals
 
             token_price = token.aggregated_price_in_stables()
+            if token_price == 0:
+                token_price = token.chain_price_in_stables()
+
             gauge.tbv += amount / 10**token.decimals * token_price
 
             LOGGER.debug(
