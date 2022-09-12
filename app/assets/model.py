@@ -52,16 +52,18 @@ class Token(Model):
             return 1.0
 
         stablecoin = Token.find(STABLE_TOKEN_ADDRESS)
-
-        amount, is_stable = Call(
-            ROUTER_ADDRESS,
-            [
-                'getAmountOut(uint256,address,address)(uint256,bool)',
-                1 * 10**self.decimals,
-                self.address,
-                stablecoin.address
-            ]
-        )()
+        try:
+            amount, is_stable = Call(
+                ROUTER_ADDRESS,
+                [
+                    'getAmountOut(uint256,address,address)(uint256,bool)',
+                    1 * 10**self.decimals,
+                    self.address,
+                    stablecoin.address
+                ]
+            )()
+        except:
+            return 0
 
         return amount / 10**stablecoin.decimals
 
