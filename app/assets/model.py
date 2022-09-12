@@ -4,6 +4,7 @@ from multicall import Call, Multicall
 import requests
 from walrus import Model, TextField, IntegerField
 from web3.auto import w3
+from web3.exceptions import ContractLogicError
 
 from app.settings import (
     LOGGER, CACHE, TOKENLISTS, ROUTER_ADDRESS, STABLE_TOKEN_ADDRESS,
@@ -62,7 +63,7 @@ class Token(Model):
                     stablecoin.address
                 ]
             )()
-        except:
+        except ContractLogicError:
             return 0
 
         return amount / 10**stablecoin.decimals
