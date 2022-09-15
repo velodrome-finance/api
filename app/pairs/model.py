@@ -178,4 +178,7 @@ class Pair(Model):
         if token1_price != 0:
             tvl += pool_data['reserve1'] * token1_price
 
+        if tvl != 0 and (token0_price == 0 or token1_price == 0):
+            tvl = tvl * 2
+
         return tvl
