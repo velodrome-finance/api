@@ -2,6 +2,7 @@
 
 from multicall import Call, Multicall
 import requests
+import requests.exceptions
 from walrus import Model, TextField, IntegerField
 from web3.auto import w3
 from web3.exceptions import ContractLogicError
@@ -24,8 +25,10 @@ class Token(Model):
 
     # See: https://docs.1inch.io/docs/aggregation-protocol/api/swagger
     AGGREGATOR_ENDPOINT = 'https://api.1inch.io/v4.0/10/quote'
+    # See: https://docs.dexscreener.com/#tokens
+    DEXSCREENER_ENDPOINT = 'https://api.dexscreener.com/latest/dex/tokens/'
 
-    def aggregated_price_in_stables(self):
+    def one_inch_price_in_stables(self):
         """Returns the price quoted from an aggregator in stables/USDC."""
         # Peg it forever.
         if self.address == STABLE_TOKEN_ADDRESS:
@@ -45,6 +48,34 @@ class Token(Model):
         amount = res.get('toTokenAmount', 0)
 
         return int(amount) / 10**stablecoin.decimals
+
+    def dexscreener_price_in_stables(self):
+        """Returns the price quoted from an aggregator in stables/USDC."""
+        # Peg it forever.
+        if self.address == STABLE_TOKEN_ADDRESS:
+            return 1.0
+
+        res = requests.get(self.DEXSCREENER_ENDPOINT + self.address).json()
+        pairs = res.get('pairs', [])
+
+        if len(pairs) == 0:
+            return 0
+
+        return float(pairs[0]['priceUsd'])
+
+    def aggregated_price_in_stables(self):
+        price = self.one_inch_price_in_stables()
+
+        if price != 0:
+            return price
+
+        try:
+            return self.dexscreener_price_in_stables()
+        except (
+            requests.exceptions.HTTPError,
+            requests.exceptions.JSONDecodeError
+        ):
+            return price
 
     def chain_price_in_stables(self):
         """Returns the price quoted from our router in stables/USDC."""
