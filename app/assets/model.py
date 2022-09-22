@@ -61,7 +61,7 @@ class Token(Model):
         if len(pairs) == 0:
             return 0
 
-        return float(pairs[0]['priceUsd'])
+        return float(pairs[0].get('priceUsd', 0))
 
     def aggregated_price_in_stables(self):
         price = self.one_inch_price_in_stables()
