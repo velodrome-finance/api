@@ -30,6 +30,8 @@ class Gauge(Model):
     rewards = HashField()
     # Total Bribes Value
     tbv = FloatField(default=0.0)
+    # Voting APR
+    apr = FloatField(default=0.0)
 
     # TODO: Backwards compat. Remove once no longer needed...
     bribeAddress = TextField()
@@ -108,8 +110,30 @@ class Gauge(Model):
             cls._fetch_external_rewards(gauge)
 
         cls._fetch_internal_rewards(gauge)
+        cls._update_apr(gauge)
 
         return gauge
+
+    @classmethod
+    def _update_apr(cls, gauge):
+        """Updates the voting apr for the gauge."""
+        # Avoid circular import...
+        from app.pairs.model import Pair
+
+        pair = Pair.get(Pair.gauge_address == gauge.address)
+
+        votes = Call(
+            VOTER_ADDRESS,
+            ['weights(address)(uint256)', pair.address]
+        )()
+
+        token = Token.find(DEFAULT_TOKEN_ADDRESS)
+        price = token.aggregated_price_in_stables()
+        votes = votes / 10**token.decimals
+
+        if votes * price > 0:
+            gauge.apr = ((gauge.tbv * 52) / (votes * price)) * 100
+            gauge.save()
 
     @classmethod
     def _fetch_external_rewards(cls, gauge):
