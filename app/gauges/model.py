@@ -109,8 +109,12 @@ class Gauge(Model):
         if data.get('wrapped_bribe_address') not in (ADDRESS_ZERO, None):
             cls._fetch_external_rewards(gauge)
 
+        has_bribes = gauge.tbv > 0
+
         cls._fetch_internal_rewards(gauge)
-        cls._update_apr(gauge)
+
+        if has_bribes:
+            cls._update_apr(gauge)
 
         return gauge
 
