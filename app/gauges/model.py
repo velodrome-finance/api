@@ -128,11 +128,10 @@ class Gauge(Model):
         )()
 
         token = Token.find(DEFAULT_TOKEN_ADDRESS)
-        price = token.aggregated_price_in_stables()
         votes = votes / 10**token.decimals
 
-        if votes * price > 0:
-            gauge.apr = ((gauge.tbv * 52) / (votes * price)) * 100
+        if votes * token.price > 0:
+            gauge.apr = ((gauge.tbv * 52) / (votes * token.price)) * 100
             gauge.save()
 
     @classmethod
@@ -167,12 +166,7 @@ class Gauge(Model):
 
             gauge.rewards[token.address] = amount / 10**token.decimals
 
-            token_price = token.aggregated_price_in_stables()
-
-            if token_price == 0:
-                token_price = token.chain_price_in_stables()
-
-            gauge.tbv += amount / 10**token.decimals * token_price
+            gauge.tbv += amount / 10**token.decimals * token.price
 
             LOGGER.debug(
                 'Fetched %s:%s reward %s:%s.',
@@ -222,12 +216,7 @@ class Gauge(Model):
             elif fee > 0:
                 gauge.rewards[token_address] = fee / 10**token.decimals
 
-            token_price = token.aggregated_price_in_stables()
-
-            if token_price == 0:
-                token_price = token.chain_price_in_stables()
-
-            gauge.tbv += fee / 10**token.decimals * token_price
+            gauge.tbv += fee / 10**token.decimals * token.price
 
             LOGGER.debug(
                 'Fetched %s:%s reward %s:%s.',

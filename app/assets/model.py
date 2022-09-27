@@ -3,7 +3,7 @@
 from multicall import Call, Multicall
 import requests
 import requests.exceptions
-from walrus import Model, TextField, IntegerField
+from walrus import Model, TextField, IntegerField, FloatField
 from web3.auto import w3
 from web3.exceptions import ContractLogicError
 
@@ -22,6 +22,7 @@ class Token(Model):
     symbol = TextField()
     decimals = IntegerField()
     logoURI = TextField()
+    price = FloatField(default=0)
 
     # See: https://docs.1inch.io/docs/aggregation-protocol/api/swagger
     AGGREGATOR_ENDPOINT = 'https://api.1inch.io/v4.0/10/quote'
@@ -110,8 +111,17 @@ class Token(Model):
         except KeyError:
             return cls.from_chain(address.lower())
 
+    def _update_price(self):
+        """Updates the token price in USD from different sources."""
+        self.price = self.aggregated_price_in_stables()
+
+        if self.price == 0:
+            self.price = self.chain_price_in_stables()
+
+        self.save()
+
     @classmethod
-    def from_chain(cls, address):
+    def from_chain(cls, address, logoURI=None):
         address = address.lower()
 
         """Fetches and returns a token from chain."""
@@ -125,6 +135,7 @@ class Token(Model):
 
         # TODO: Add a dummy logo...
         token = cls.create(address=address, **data)
+        token._update_price()
 
         LOGGER.debug('Fetched %s:%s.', cls.__name__, address)
 
@@ -148,7 +159,8 @@ class Token(Model):
                     if token_data['address'] in IGNORED_TOKEN_ADDRESSES:
                         continue
 
-                    cls.create(**token_data)
+                    token = cls.create(**token_data)
+                    token._update_price()
 
                     LOGGER.debug(
                         'Loaded %s:%s.', cls.__name__, token_data['address']

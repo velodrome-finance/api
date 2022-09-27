@@ -19,7 +19,7 @@ def sync(force_shutdown=False):
 
     Token.from_tokenlists()
 
-    with ThreadPool() as pool:
+    with ThreadPool(4) as pool:
         addresses = Pair.chain_addresses()
 
         LOGGER.debug(
