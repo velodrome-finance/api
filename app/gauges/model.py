@@ -31,6 +31,7 @@ class Gauge(Model):
     # Total Bribes Value
     tbv = FloatField(default=0.0)
     # Voting APR
+    votes = FloatField(default=0.0)
     apr = FloatField(default=0.0)
 
     # TODO: Backwards compat. Remove once no longer needed...
@@ -131,6 +132,7 @@ class Gauge(Model):
         votes = votes / 10**token.decimals
 
         if votes * token.price > 0:
+            gauge.votes = votes
             gauge.apr = ((gauge.tbv * 52) / (votes * token.price)) * 100
             gauge.save()
 
