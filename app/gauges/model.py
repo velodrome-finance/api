@@ -168,7 +168,8 @@ class Gauge(Model):
 
             gauge.rewards[token.address] = amount / 10**token.decimals
 
-            gauge.tbv += amount / 10**token.decimals * token.price
+            if token.price:
+                gauge.tbv += amount / 10**token.decimals * token.price
 
             LOGGER.debug(
                 'Fetched %s:%s reward %s:%s.',
@@ -218,7 +219,8 @@ class Gauge(Model):
             elif fee > 0:
                 gauge.rewards[token_address] = fee / 10**token.decimals
 
-            gauge.tbv += fee / 10**token.decimals * token.price
+            if token.price:
+                gauge.tbv += fee / 10**token.decimals * token.price
 
             LOGGER.debug(
                 'Fetched %s:%s reward %s:%s.',
