@@ -165,10 +165,10 @@ class Pair(Model):
         """Returns the TVL of the pool."""
         tvl = 0
 
-        if token0.price != 0:
+        if token0.price and token0.price != 0:
             tvl += pool_data['reserve0'] * token0.price
 
-        if token1.price != 0:
+        if token1.price and token1.price != 0:
             tvl += pool_data['reserve1'] * token1.price
 
         if tvl != 0 and (token0.price == 0 or token1.price == 0):
