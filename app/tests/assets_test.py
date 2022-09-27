@@ -13,8 +13,13 @@ class AssetsTestCase(AppTestCase):
         self.assertEqual(type(result.json['data']), list)
         self.assertTrue(len(result.json['data']) > 1)
 
-        for ignored in IGNORED_TOKEN_ADDRESSES:
-            self.assertEqual(
-                len(list(Token.query(Token.address == ignored))),
-                0
-            )
+        ignored = list(
+            filter(lambda t: t.address in IGNORED_TOKEN_ADDRESSES, Token.all())
+        )
+
+        self.assertEqual(len(ignored), 0)
+
+        zero_priced = list(filter(lambda t: t.price == 0, Token.all()))
+        zero_priced_symbols = list(map(lambda t: t.symbol, zero_priced))
+
+        self.assertFalse('BOND' in zero_priced_symbols)

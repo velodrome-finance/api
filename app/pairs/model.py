@@ -163,22 +163,15 @@ class Pair(Model):
     @classmethod
     def _tvl(cls, pool_data, token0, token1):
         """Returns the TVL of the pool."""
-        token0_price = token0.aggregated_price_in_stables()
-        token1_price = token1.aggregated_price_in_stables()
-
-        if token0_price == 0:
-            token0_price = token0.chain_price_in_stables()
-        if token1_price == 0:
-            token1_price = token1.chain_price_in_stables()
         tvl = 0
 
-        if token0_price != 0:
-            tvl += pool_data['reserve0'] * token0_price
+        if token0.price != 0:
+            tvl += pool_data['reserve0'] * token0.price
 
-        if token1_price != 0:
-            tvl += pool_data['reserve1'] * token1_price
+        if token1.price != 0:
+            tvl += pool_data['reserve1'] * token1.price
 
-        if tvl != 0 and (token0_price == 0 or token1_price == 0):
+        if tvl != 0 and (token0.price == 0 or token1.price == 0):
             tvl = tvl * 2
 
         return tvl
