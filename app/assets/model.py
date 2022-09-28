@@ -28,6 +28,23 @@ class Token(Model):
     AGGREGATOR_ENDPOINT = 'https://api.1inch.io/v4.0/10/quote'
     # See: https://docs.dexscreener.com/#tokens
     DEXSCREENER_ENDPOINT = 'https://api.dexscreener.com/latest/dex/tokens/'
+    # See: https://defillama.com/docs/api#operations-tag-coins
+    DEFILLAMA_ENDPOINT = 'https://coins.llama.fi/prices/current/'
+
+    def defillama_price_in_stables(self):
+        """Returns the price quoted from our llama defis."""
+        # Peg it forever.
+        if self.address == STABLE_TOKEN_ADDRESS:
+            return 1.0
+
+        chain_token = 'optimism:' + self.address.lower()
+        res = requests.get(self.DEFILLAMA_ENDPOINT + chain_token).json()
+        coins = res.get('coins', {})
+
+        for (_, coin) in coins.items():
+            return coin.get('price', 0)
+
+        return 0
 
     def one_inch_price_in_stables(self):
         """Returns the price quoted from an aggregator in stables/USDC."""
@@ -65,7 +82,7 @@ class Token(Model):
         return float(pairs[0].get('priceUsd', 0))
 
     def aggregated_price_in_stables(self):
-        price = self.one_inch_price_in_stables()
+        price = self.defillama_price_in_stables()
 
         if price != 0:
             return price
