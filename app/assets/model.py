@@ -74,7 +74,7 @@ class Token(Model):
             return 1.0
 
         res = requests.get(self.DEXSCREENER_ENDPOINT + self.address).json()
-        pairs = res.get('pairs', [])
+        pairs = res.get('pairs') or []
 
         if len(pairs) == 0:
             return 0
