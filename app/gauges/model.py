@@ -16,6 +16,7 @@ class Gauge(Model):
 
     DEFAULT_DECIMALS = 18
     DAY_IN_SECONDS = 24 * 60 * 60
+    CACHER = CACHE.cache()
 
     address = TextField(primary_key=True)
     decimals = IntegerField(default=DEFAULT_DECIMALS)
@@ -116,6 +117,19 @@ class Gauge(Model):
         return gauge
 
     @classmethod
+    @CACHER.cached(timeout=(1 * DAY_IN_SECONDS))
+    def rebase_apr(cls):
+        minter_address = Call(VOTER_ADDRESS, 'minter()(address)')()
+        weekly = Call(minter_address, 'weekly_emission()(uint256)')()
+        supply = Call(minter_address, 'circulating_supply()(uint256)')()
+        growth = Call(
+            minter_address,
+            ['calculate_growth(uint256)(uint256)', weekly]
+        )()
+
+        return ((growth * 52) / supply) * 100
+
+    @classmethod
     def _update_apr(cls, gauge):
         """Updates the voting apr for the gauge."""
         # Avoid circular import...
@@ -134,6 +148,7 @@ class Gauge(Model):
         if token.price and votes * token.price > 0:
             gauge.votes = votes
             gauge.apr = ((gauge.tbv * 52) / (votes * token.price)) * 100
+            gauge.apr += cls.rebase_apr()
             gauge.save()
 
     @classmethod
