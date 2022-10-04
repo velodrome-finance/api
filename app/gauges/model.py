@@ -145,10 +145,11 @@ class Gauge(Model):
         token = Token.find(DEFAULT_TOKEN_ADDRESS)
         votes = votes / 10**token.decimals
 
+        gauge.apr = cls.rebase_apr()
+
         if token.price and votes * token.price > 0:
             gauge.votes = votes
-            gauge.apr = ((gauge.tbv * 52) / (votes * token.price)) * 100
-            gauge.apr += cls.rebase_apr()
+            gauge.apr += ((gauge.tbv * 52) / (votes * token.price)) * 100
             gauge.save()
 
     @classmethod
