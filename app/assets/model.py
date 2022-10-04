@@ -79,7 +79,11 @@ class Token(Model):
         if len(pairs) == 0:
             return 0
 
-        return float(pairs[0].get('priceUsd', 0))
+        # To avoid this kek...
+        #   ValueError: could not convert string to float: '140344,272.43'
+        price = str(pairs[0].get('priceUsd') or 0).replace(',', '')
+
+        return float(price)
 
     def aggregated_price_in_stables(self):
         price = self.defillama_price_in_stables()
