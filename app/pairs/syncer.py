@@ -3,7 +3,6 @@
 from multiprocessing import Process
 from multiprocessing.pool import ThreadPool
 import time
-import sys
 
 from app.pairs import Pairs, Pair
 from app.assets import Assets, Token
@@ -12,7 +11,7 @@ from app.settings import (
 )
 
 
-def sync(force_shutdown=False):
+def sync():
     """Syncs """
     LOGGER.info('Syncing pairs ...')
     t0 = time.time()
@@ -42,14 +41,10 @@ def sync(force_shutdown=False):
 
 
 def sync_forever():
-    if SYNC_WAIT_SECONDS < 1:
-        LOGGER.info('Syncing is disabled!')
-        sys.exit(0)
-
     LOGGER.info('Syncing every %s seconds ...', SYNC_WAIT_SECONDS)
 
     while True:
-        sync_proc = Process(target=sync, args=(False,))
+        sync_proc = Process(target=sync)
         try:
             sync_proc.start()
             sync_proc.join()
@@ -68,4 +63,7 @@ def sync_forever():
 
 
 if __name__ == '__main__':
-    sync_forever()
+    if SYNC_WAIT_SECONDS < 1:
+        sync()
+    else:
+        sync_forever()
