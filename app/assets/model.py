@@ -30,6 +30,18 @@ class Token(Model):
     DEXSCREENER_ENDPOINT = 'https://api.dexscreener.com/latest/dex/tokens/'
     # See: https://defillama.com/docs/api#operations-tag-coins
     DEFILLAMA_ENDPOINT = 'https://coins.llama.fi/prices/current/'
+    # See: https://api.dev.dex.guru/docs#tag/Token-Finance
+    DEXGURU_ENDPOINT = 'https://api.dev.dex.guru/v1/chain/10/tokens/%/market'
+
+    def dexguru_price_in_stables(self):
+        """Returns the price quoted from DexGuru"""
+        # Peg it forever.
+        if self.address == STABLE_TOKEN_ADDRESS:
+            return 1.0
+
+        res = requests.get(self.DEXGURU_ENDPOINT % self.address.lower()).json()
+
+        return res.get('price_usd', 0)
 
     def defillama_price_in_stables(self):
         """Returns the price quoted from our llama defis."""
@@ -79,9 +91,15 @@ class Token(Model):
         if len(pairs) == 0:
             return 0
 
+        sorted_pairs = sorted(
+            pairs,
+            key=lambda i: i['txns']['h24']['buys'] + i['txns']['h24']['sells'],
+            reverse=True
+        )
+
         # To avoid this kek...
         #   ValueError: could not convert string to float: '140344,272.43'
-        price = str(pairs[0].get('priceUsd') or 0).replace(',', '')
+        price = str(sorted_pairs[0].get('priceUsd') or 0).replace(',', '')
 
         return float(price)
 
