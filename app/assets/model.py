@@ -97,9 +97,14 @@ class Token(Model):
             reverse=True
         )
 
-        # To avoid this kek...
-        #   ValueError: could not convert string to float: '140344,272.43'
-        price = str(sorted_pairs[0].get('priceUsd') or 0).replace(',', '')
+        price = 0
+
+        for prices in sorted_pairs:
+            if prices['baseToken']['address'].lower() == self.address.lower():
+                # To avoid this kek...
+                #   ValueError: could not convert string to float: '1,272.43'
+                price = str(prices.get('priceUsd') or 0).replace(',', '')
+                break
 
         return float(price)
 
