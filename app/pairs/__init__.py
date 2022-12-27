@@ -9,7 +9,7 @@ from .model import Pair
 from app.assets import Token
 from app.gauges import Gauge
 from app.misc import JSONEncoder
-from app.settings import CACHE, LOGGER, reset_multicall_pool_executor
+from app.settings import CACHE, LOGGER
 
 
 class Pairs(object):
@@ -67,7 +67,6 @@ class Pairs(object):
         else:
             return
 
-        reset_multicall_pool_executor()
         Pairs.recache()
 
     def on_get(self, req, resp):
