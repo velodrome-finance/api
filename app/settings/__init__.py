@@ -4,24 +4,11 @@ from __future__ import absolute_import
 import logging
 import os
 import sys
-from concurrent.futures import ThreadPoolExecutor
 
 import fakeredis
 from honeybadger import honeybadger
-from multicall import utils as multicall_utils
 import redis.exceptions
 from walrus import Database
-
-# Use a threaded executor...
-multicall_utils.process_pool_executor = ThreadPoolExecutor()
-
-
-def reset_multicall_pool_executor():
-    """Cleanup asyncio leftovers, replace executor to free memory!"""
-    multicall_utils.process_pool_executor.shutdown(
-        wait=True, cancel_futures=True
-    )
-    multicall_utils.process_pool_executor = ThreadPoolExecutor()
 
 
 def honeybadger_handler(req, resp, exc, params):
@@ -76,7 +63,7 @@ SYNC_WAIT_SECONDS = int(os.getenv('SYNC_WAIT_SECONDS', 0))
 CACHE = None
 
 try:
-    CACHE = Database.from_url(os.getenv('REDIS_URL'))
+    CACHE = Database.from_url(os.getenv('REDIS_URL', ''))
     CACHE.ping()
 except (ValueError, redis.exceptions.ConnectionError):
     LOGGER.debug('No Redis server found, using memory ...')

@@ -7,7 +7,7 @@ import time
 from app.pairs import Pairs, Pair
 from app.assets import Assets, Token
 from app.settings import (
-    LOGGER, SYNC_WAIT_SECONDS, reset_multicall_pool_executor
+    LOGGER, SYNC_WAIT_SECONDS
 )
 
 
@@ -36,8 +36,6 @@ def sync():
     Assets.recache()
 
     LOGGER.info('Syncing pairs done in %s seconds.', time.time() - t0)
-
-    reset_multicall_pool_executor()
 
 
 def sync_forever():
