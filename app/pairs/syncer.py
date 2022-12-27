@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
+import os
 from multiprocessing import Process
 from multiprocessing.pool import ThreadPool
 import time
@@ -18,7 +19,7 @@ def sync():
 
     Token.from_tokenlists()
 
-    with ThreadPool(4) as pool:
+    with ThreadPool(int(os.getenv('SYNC_MAX_THREADS', 4))) as pool:
         addresses = Pair.chain_addresses()
 
         LOGGER.debug(
