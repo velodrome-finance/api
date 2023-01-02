@@ -34,6 +34,8 @@ class Token(Model):
     DEFILLAMA_ENDPOINT = 'https://coins.llama.fi/prices/current/'
     # See: https://api.dev.dex.guru/docs#tag/Token-Finance
     DEXGURU_ENDPOINT = 'https://api.dev.dex.guru/v1/chain/10/tokens/%/market'
+    # See: https://docs.open.debank.com/en/reference/api-pro-reference/token
+    DEBANK_ENDPOINT = 'https://api.debank.com/history/token_price?chain=op&'
 
     CHAIN_NAMES = {'1': 'ethereum',
                         '56': 'bsc',
@@ -43,6 +45,19 @@ class Token(Model):
                         '10': 'optimism',
                         '137': 'polygon',
                         '42220': 'celo'}
+
+    def debank_price_in_stables(self):
+        """Returns the price quoted from DeBank"""
+        # Peg it forever.
+        if self.address == STABLE_TOKEN_ADDRESS:
+            return 1.0
+
+        req = self.DEBANK_ENDPOINT + 'token_id=' + self.address.lower()
+
+        res = requests.get(req).json()
+        token_data = res.get('data') or {}
+
+        return token_data.get('price') or 0
 
     def dexguru_price_in_stables(self):
         """Returns the price quoted from DexGuru"""
@@ -190,6 +205,9 @@ class Token(Model):
 
         if self.price == 0:
             self.price = self.chain_price_in_stables()
+
+        if self.price == 0:
+            self.price = self.debank_price_in_stables()
 
         self.save()
 
