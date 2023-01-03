@@ -18,6 +18,8 @@ def sync():
     t0 = time.time()
 
     Token.from_tokenlists()
+    Assets.recache()
+    LOGGER.info('Syncing tokens done in %s seconds.', time.time() - t0)
 
     with ThreadPool(int(os.getenv('SYNC_MAX_THREADS', 4))) as pool:
         addresses = Pair.chain_addresses()
@@ -32,10 +34,7 @@ def sync():
         pool.close()
         pool.join()
 
-    # Reset any cache...
     Pairs.recache()
-    Assets.recache()
-
     LOGGER.info('Syncing pairs done in %s seconds.', time.time() - t0)
 
 
