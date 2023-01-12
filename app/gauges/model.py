@@ -5,7 +5,7 @@ from web3.constants import ADDRESS_ZERO
 
 from app.settings import (
     LOGGER, CACHE, VOTER_ADDRESS,
-    DEFAULT_TOKEN_ADDRESS, WRAPPED_BRIBE_FACTORY_ADDRESS
+    DEFAULT_TOKEN_ADDRESS, WRAPPED_BRIBE_FACTORY_ADDRESS, VE_ADDRESS
 )
 from app.assets import Token
 
@@ -121,7 +121,7 @@ class Gauge(Model):
     def rebase_apr(cls):
         minter_address = Call(VOTER_ADDRESS, 'minter()(address)')()
         weekly = Call(minter_address, 'weekly_emission()(uint256)')()
-        supply = Call(minter_address, 'circulating_supply()(uint256)')()
+        supply = Call(VE_ADDRESS, 'supply()(uint256)')()
         growth = Call(
             minter_address,
             ['calculate_growth(uint256)(uint256)', weekly]
