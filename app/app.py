@@ -14,6 +14,7 @@ from app.configuration import Configuration
 from app.pairs import Pairs
 from app.settings import LOGGER, honeybadger_handler
 from app.venfts import Accounts
+from app.supply import Supply
 
 app = falcon.App(cors_enable=True, middleware=[CompressionMiddleware()])
 app.add_error_handler(Exception, honeybadger_handler)
@@ -23,6 +24,7 @@ app.add_route('/api/v1/accounts', Accounts())
 app.add_route('/api/v1/assets', Assets())
 app.add_route('/api/v1/configuration', Configuration())
 app.add_route('/api/v1/pairs', Pairs())
+app.add_route('/api/v1/supply', Supply())
 
 # TODO: Remove when no longer needed for backward-compat...
 app.add_route('/api/v1/baseAssets', Assets())
