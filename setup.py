@@ -21,7 +21,10 @@ setup(
         'redis == 4.4.0',
         'fakeredis == 2.4.0',
         'walrus == 0.9.2',
-        'honeybadger == 0.14.0'
+        'honeybadger == 0.14.0',
+        # TODO: Bump when the issue is fixed upstream:
+        #     https://github.com/ilanschnell/bitarray/issues/188
+        'bitarray == 2.7.2'
     ),
     version=":versiontools:app"
 )
