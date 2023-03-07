@@ -29,6 +29,8 @@ class Gauge(Model):
 
     # Bribes in the form of `token_address => token_amount`...
     rewards = HashField()
+    # Pair Fees (Internal)
+    fees = FloatField(default=0.0)
     # Total Bribes Value
     tbv = FloatField(default=0.0)
     # Voting APR
@@ -237,6 +239,7 @@ class Gauge(Model):
 
             if token.price:
                 gauge.tbv += fee / 10**token.decimals * token.price
+                gauge.fees += fee / 10**token.decimals * token.price
 
             LOGGER.debug(
                 'Fetched %s:%s reward %s:%s.',
