@@ -210,13 +210,13 @@ class Gauge(Model):
 
         fees_data = Multicall([
             Call(
-                pair.token0_address,
-                ['balanceOf(address)(uint256)', pair_fees_address],
+                gauge.address,
+                'fees0()(uint256)',
                 [['fees0', None]]
             ),
             Call(
-                pair.token1_address,
-                ['balanceOf(address)(uint256)', pair_fees_address],
+                gauge.address,
+                'fees1()(uint256)',
                 [['fees1', None]]
             )
         ])()
@@ -243,7 +243,7 @@ class Gauge(Model):
                 gauge.fees += fee / 10**token.decimals * token.price
 
             LOGGER.debug(
-                'Fetched %s:%s reward %s:%s.',
+                'Fetched %s:%s fee reward %s:%s.',
                 cls.__name__,
                 gauge.address,
                 token_address,
