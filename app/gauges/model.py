@@ -206,16 +206,17 @@ class Gauge(Model):
         from app.pairs.model import Pair
 
         pair = Pair.get(Pair.gauge_address == gauge.address)
+        pair_fees_address = Call(pair.address, 'fees()(address)')()
 
         fees_data = Multicall([
             Call(
-                gauge.fees_address,
-                ['left(address)(uint256)', pair.token0_address],
+                pair.token0_address,
+                ['balanceOf(address)(uint256)', pair_fees_address],
                 [['fees0', None]]
             ),
             Call(
-                gauge.fees_address,
-                ['left(address)(uint256)', pair.token1_address],
+                pair.token1_address,
+                ['balanceOf(address)(uint256)', pair_fees_address],
                 [['fees1', None]]
             )
         ])()
