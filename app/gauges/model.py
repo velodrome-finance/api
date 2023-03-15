@@ -210,10 +210,12 @@ class Gauge(Model):
         fees_data = Multicall([
             Call(
                 gauge.address,
+                'fees0()(uint256)',
                 [['fees0', None]]
             ),
             Call(
                 gauge.address,
+                'fees1()(uint256)',
                 [['fees1', None]]
             )
         ])()
