@@ -94,7 +94,7 @@ class Accounts(object):
 
         resp.status = falcon.HTTP_200
 
-        if not Web3.isAddress(address):
+        if not Web3.is_address(address):
             resp.text = json.dumps(dict(data=[]))
             return
         else:

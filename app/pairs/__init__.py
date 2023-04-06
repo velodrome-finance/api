@@ -57,12 +57,12 @@ class Pairs(object):
 
     def resync(self, pair_address, gauge_address):
         """Resyncs a pair based on it's address or gauge address."""
-        if Web3.isAddress(gauge_address):
+        if Web3.is_address(gauge_address):
             old_pair = Pair.get(
                 Pair.gauge_address == str(gauge_address).lower()
             )
             Pair.from_chain(old_pair.address)
-        elif Web3.isAddress(pair_address):
+        elif Web3.is_address(pair_address):
             Pair.from_chain(pair_address)
         else:
             return
