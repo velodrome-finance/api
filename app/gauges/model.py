@@ -206,7 +206,6 @@ class Gauge(Model):
         from app.pairs.model import Pair
 
         pair = Pair.get(Pair.gauge_address == gauge.address)
-        pair_fees_address = Call(pair.address, 'fees()(address)')()
 
         fees_data = Multicall([
             Call(
