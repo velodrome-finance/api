@@ -228,17 +228,7 @@ class Gauge(Model):
         for (token_address, fee) in fees:
             token = Token.find(token_address)
 
-            if gauge.rewards.get(token_address):
-                gauge.rewards[token_address] = (
-                    float(gauge.rewards[token_address]) + (
-                        fee / 10**token.decimals
-                    )
-                )
-            elif fee > 0:
-                gauge.rewards[token_address] = fee / 10**token.decimals
-
             if token.price:
-                gauge.tbv += fee / 10**token.decimals * token.price
                 gauge.fees += fee / 10**token.decimals * token.price
 
             LOGGER.debug(
